@@ -54,6 +54,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'SelfStorage.urls'
+AUTH_USER_MODEL = 'main.Customer'
 
 TEMPLATES = [
     {
