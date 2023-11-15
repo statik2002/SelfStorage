@@ -189,8 +189,8 @@ class Rent(models.Model):
         return f'{self.renter} - {self.box}'
 
     class Meta:
-        verbose_name = 'Бокс'
-        verbose_name_plural = 'Боксы'
+        verbose_name = 'Бокс в аренде'
+        verbose_name_plural = 'Боксы в аренде'
 
 
 class Image(models.Model):
