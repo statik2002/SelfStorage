@@ -32,9 +32,27 @@
 				<li class="nav-item me-5">
 					<a class="nav-link SelfStorage_black" href="{% url 'main:boxes' %}">Арендовать бокс</a>
 				</li>
+				{% if user.is_authenticated %}
+				<li class="nav-item dropdown me-5">
+					<a class="nav-link" type="button" href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						{% if not user.avatar %}
+							<img src="{% static 'img/no_avatar.png' %}" class="rounded-pill mb-3" alt="" height="35">
+						{% else %}
+							<img src="{{ user.avatar.url }}" class="rounded-pill mb-3" alt="" style="width: 180px; height: 180px">
+						{% endif %}
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuAvatar">
+						<li><a class="dropdown-item" href="{% url 'main:cabinet' %}">Личный кабинет</a></li>
+						<li><a class="dropdown-item" href="{% url 'main:boxes' %}">Моя аренда</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item" href="{% url 'main:logout' %}">Выход</a></li>
+				  	</ul>
+				</li>
+				{% else %}
 				<li class="nav-item me-5">
 					<a class="nav-link SelfStorage_green" href="#" data-bs-toggle="modal" data-bs-target="#SignModal">Войти</a>
 				</li>
+				{% endif %}
 				<li class="nav-item d-flex align-items-center">
 					<div class="d-flex justify-content-center align-items-center rounded-pill SelfStorage__bg_green me-2" style="height: 36px; width: 36px;">
 						<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="white" class="bi bi-telephone-fill" viewBox="0 0 16 16">
