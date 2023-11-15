@@ -194,7 +194,10 @@ class Rent(models.Model):
 
 
 class Image(models.Model):
-    image = models.ImageField()
+    image = models.ImageField(
+        upload_to='uploads',
+        verbose_name='Картинка'
+    )
     storage = models.ForeignKey(
         Storage,
         on_delete=models.CASCADE,
