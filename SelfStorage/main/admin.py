@@ -26,6 +26,7 @@ class ImageAdmin(admin.ModelAdmin):
 
 class ImageInline(admin.TabularInline):
     model = Image
+    extra = 0
 
 
 @admin.register(Storage)
