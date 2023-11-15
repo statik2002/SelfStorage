@@ -3,9 +3,29 @@ from django.contrib import admin
 from main.models import Customer
 from main.models import Storage, Box, Status, Rent, Image, UtmMark
 
+
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'phone_number', 'date_joined')
+
+
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    search_fields = [
+        'storage',
+        'image',
+    ]
+    list_display = [
+        'storage',
+        'image',
+    ]
+    raw_id_fields = [
+        'storage',
+    ]
+
+
+class ImageInline(admin.TabularInline):
+    model = Image
 
 
 @admin.register(Storage)
@@ -23,6 +43,9 @@ class StorageAdmin(admin.ModelAdmin):
         'email',
         'city',
         'address',
+    ]
+    inlines = [
+        ImageInline
     ]
 
 
@@ -75,21 +98,6 @@ class StatusAdmin(admin.ModelAdmin):
     ]
     list_display = [
         'title',
-    ]
-
-
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
-    search_fields = [
-        'storage',
-        'image',
-    ]
-    list_display = [
-        'storage',
-        'image',
-    ]
-    raw_id_fields = [
-        'storage',
     ]
 
 
