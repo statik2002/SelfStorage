@@ -7,10 +7,17 @@
 		<div class="col-12 col-lg-6 mb-3 mb-lg-0">
 			<h1 class="fw-bold SelfStorage_green mb-5">Доставка и бережное хранение ваших вещей</h1>
 			<h4 class="fw-lighter SelfStorage_grey mb-5">Аренда бокса на любой срок Бесплатная доставка от вашего дома </h4>
-			<form class="">
-				<input type="text" required name="EMAIL1" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail">
+			<form class="" action="{% url 'main:order' %}" method="post">
+				{% if not user.is_authenticated %}
+				<input type="email" required name="EMAIL1" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail">
+				{% endif %}
+				<a href="{% url 'main:calc' %}" class="btn border-8 py-3 px-5 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange" role="button" aria-disabled="true">Рассчитать стоимость</a>
+				<!--
 				<button class="btn border-8 py-3 px-5 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Рассчитать стоимость</button>
-				<span class="text-center fw-light">Нажимая на кнопку, вы подтверждаете свое <a href="#" class="link-dark">согласие на обработку персональных данных</a></span>
+				-->
+				{% if not user.is_authenticated %}
+				<span class="text-center fw-light">Нажимая на кнопку, вы подтверждаете свое <a href="{% url 'main:agreement' %}" class="link-dark" target="_blank">согласие на обработку персональных данных</a></span>
+				{% endif %}
 			</form>
 		</div>
 		<div class="col-12 col-lg-6 SelfStorage__img"></div>
@@ -56,7 +63,10 @@
 				</div>
 
 				<h4 class="text-white mt-5 mb-3">Бокс от 190 р. за м²</h4>
+				<a href="{% url 'main:boxes' %}" class="btn fs_24 SelfStorage_green bg-white SelfStorage__btn_green border-8 w-50 py-3" role="button" aria-disabled="true">Подробнее</a>
+				<!--
 				<button class="btn fs_24 SelfStorage_green bg-white SelfStorage__btn_green border-8 w-50 py-3">Подробнее</button>
+				-->
 			</div>
 		</div>
 		<div class="col-12 col-lg-6 d-flex justify-content-center justify-content-lg-start">
@@ -70,7 +80,10 @@
 					<span class="text-white">Другие идеи хранения</span>
 				</div>
 				<h4 class="text-white mt-5 mb-3">Бокс от 210 р. за м²</h4>
+				<a href="{% url 'main:boxes' %}" class="btn fs_24 SelfStorage_orange bg-white SelfStorage__btn_orange border-8 w-50 py-3" role="button" aria-disabled="true">Подробнее</a>
+				<!--
 				<button class="btn fs_24 SelfStorage_orange bg-white SelfStorage__btn_orange border-8 w-50 py-3">Подробнее</button>
+				-->
 			</div>
 		</div>
 	</article>
@@ -136,8 +149,12 @@
 				</div>
 				<a href="#" class="text-center text-lg-start mt-4 mb-5 SelfStorage_green">Подробнее о складе</a>
 				<div class="d-flex flex-column align-items-center align-items-lg-start">
+					<a href="{% url 'main:boxes' %}" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3" role="button" aria-disabled="true">Арендовать бокс</a>
+					<a href="{% url 'main:boxes' %}" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange" role="button" aria-disabled="true">Выбрать склад</a>
+					<!--
 					<button class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Арендовать бокс</button>
 					<button class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange">Выбрать склад</button>
+					-->
 				</div>
 			</div>
 		</div>
@@ -199,14 +216,16 @@
 		</div>
 	</article>
 </main>
+{% if not user.is_authenticated %}
 <aside class="py-5 mt-header SelfStorage__bg_green">
 	<div class="container py-5Арендовать бокс">
 		<div class="d-flex flex-column align-items-center">
 			<h1 class="text-white text-center fw-bold mb-4">Арендуйте свой первый бокс прямо сейчас и получите скидку 15% до конца апреля</h1>
 			<h4 class="text-white text-center fw-light">Акция распространяется только на новых пользователей сервиса SelfStorage</h4>
-			<form class="row my-4">
+			<form class="row my-4" action="{% url 'main:order' %}" method="post">
+				{% csrf_token %}
 				<div class="col-12 col-lg-6">
-					<input type="text" required name="EMAIL2" class="form-control border-8 mb-4 me-3 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail">
+					<input type="email" required name="EMAIL2" class="form-control border-8 mb-4 me-3 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail">
 				</div>
 				<div class="col-12 col-lg-6">
 					<button class="btn w-100 border-8 py-3 px-5 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Рассчитать стоимость</button>
@@ -216,4 +235,5 @@
 		</div>
 	</div>
 </aside>
+{% endif %}
 {% endblock content %}

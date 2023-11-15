@@ -222,14 +222,22 @@
 			<h1 class="text-white text-center fw-bold mb-4">Остались вопросы?</h1>
 			<h4 class="text-white text-center fw-light">Оставьте заявку и наши менеджеры свяжутся с вами в ближайшее время</h4>
 			<form class="row my-4">
+				{% if not user.is_authenticated %}
 				<div class="col-12 col-lg-6">
 					<input type="text" required name="EMAIL2" class="form-control border-8 mb-4 me-3 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey" placeholder="Укажите ваш e-mail">
 				</div>
 				<div class="col-12 col-lg-6">
 					<button class="btn w-100 border-8 py-3 px-5 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Рассчитать стоимость</button>
 				</div>
+				{% else %}
+				<div class="col-12">
+					<button class="btn w-100 border-8 py-3 px-5 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Рассчитать стоимость</button>
+				</div>
+				{% endif %}
 			</form>
-			<span class="text-white text-center fw-light">Нажимая на кнопку, вы подтверждаете свое <a href="#" class="text-white">согласие на обработку персональных данных</a></span>
+			{% if not user.is_authenticated %}
+			<span class="text-white text-center fw-light">Нажимая на кнопку, вы подтверждаете свое <a href="{% url 'main:agreement' %}" class="text-white" target="_blank">согласие на обработку персональных данных</a></span>
+			{% endif %}
 		</div>
 	</div>
 </aside>

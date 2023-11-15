@@ -135,3 +135,80 @@ def user_registration(request):
 
     else:
         return render(request, 'main/index.html', {})
+
+
+def contacts(request):
+
+    context = {
+
+    }
+    return render(request, 'main/contacts.html', context)
+
+
+def law_doc(request):
+
+    context = {
+
+    }
+    return render(request, 'main/law_doc.html', context)
+
+
+def policy(request):
+
+    context = {
+
+    }
+    return render(request, 'main/policy.html', context)
+
+
+def tariff(request):
+
+    context = {
+
+    }
+    return render(request, 'main/tariff.html', context)
+
+
+def calc(request):
+
+    context = {
+
+    }
+    return render(request, 'main/calc.html', context)
+
+
+def feedbacks(request):
+
+    context = {
+
+    }
+    return render(request, 'main/feedbacks.html', context)
+
+
+def storage_list(request):
+
+    context = {
+
+    }
+    return render(request, 'main/storage_list.html', context)
+
+
+def agreement(request):
+    context = {
+
+    }
+    return render(request, 'main/agreement.html', context)
+
+
+def forget_password(request):
+    context = {
+
+    }
+    return render(request, 'main/forget_password.html', context)
+
+
+def order(request):
+    context = {
+
+    }
+    return render(request, 'main/order.html', context)

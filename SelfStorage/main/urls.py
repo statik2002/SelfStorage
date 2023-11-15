@@ -10,5 +10,15 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('cabinet/', views.cabinet, name='cabinet'),
-    path('registration/', views.user_registration, name='registration')
+    path('registration/', views.user_registration, name='registration'),
+    path('contacts/', views.contacts, name='contacts'),
+    path('law_docs/', views.law_doc, name='law_doc'),
+    path('policy/', views.policy, name='policy'),
+    path('tariff/', views.tariff, name='tariff'),
+    path('calc/', views.calc, name='calc'),
+    path('feedbacks/', views.feedbacks, name='feedbacks'),
+    path('storage_list/', views.storage_list, name='storage_list'),
+    path('agreement/', views.agreement, name='agreement'),
+    path('forget_password/', views.forget_password, name='forget_password'),
+    path('order/', views.order, name='order'),
 ]
