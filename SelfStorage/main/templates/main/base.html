@@ -75,6 +75,7 @@
 				<form class="d-flex flex-column align-items-center" style="max-width: 420px" action="{% url 'main:registration' %}" method="post">
 					{% csrf_token %}
 					<h1 class="modal-title text-center fw-bold mb-3">Регистрация</h1>
+					<input type="hidden" name="next" value="{{ request.path }}">
 					<input type="email" required name="EMAIL_CREATE" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey" placeholder="E-mail">
 					<input type="text" required name="FIRSTNAME_CREATE" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey" placeholder="First name">
 					<input type="text" required name="LASTNAME_CREATE" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey" placeholder="Last name">
