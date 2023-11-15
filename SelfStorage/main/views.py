@@ -5,9 +5,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
-from django.contrib.auth.models import User
-
-from main.forms import loginForm
 from main.models import Customer
 
 
@@ -123,7 +120,8 @@ def user_registration(request):
                 name=f'{first_name} {last_name}',
                 phone_number=phone,
                 first_name=first_name,
-                last_name=last_name
+                last_name=last_name,
+                is_read_pd=True
             )
             login(request, user)
             return redirect(reverse('main:cabinet'), kwargs={})

@@ -27,6 +27,7 @@ class Customer(AbstractUser):
     email = models.EmailField(max_length=256, unique=True)
     first_name = models.CharField(max_length=256, null=True, blank=True)
     last_name = models.CharField(max_length=256, null=True, blank=True)
+    is_read_pd = models.BooleanField(default=False)
     name = models.CharField(
         'Имя пользователя',
         max_length=100,
