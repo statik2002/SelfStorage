@@ -3,8 +3,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from main.forms import loginForm
+from main.models import Customer
 
 
 def index(request):
@@ -74,17 +76,14 @@ def user_login(request):
 def cabinet(request):
 
     if request.method == 'POST':
-        email = request.POST.get('EMAIL')
-        phone_number = request.POST.get('PHONE')
-        password = request.POST.get('PASSWORD')
+        email = request.POST.get('EMAIL_EDIT')
+        phone_number = request.POST.get('PHONE_EDIT')
         first_name = request.POST.get('FIRSTNAME')
         last_name = request.POST.get('LASTNAME')
         user = request.user
-        print(user)
 
         user.email = email
         user.phone_number = phone_number
-        user.password = password
         user.first_name = first_name
         user.last_name = last_name
         user.save()
@@ -92,3 +91,30 @@ def cabinet(request):
         return render(request, 'main/my-rent.html', {})
     else:
         return render(request, 'main/my-rent.html', {})
+
+
+def user_registration(request):
+
+    if request.method == 'POST':
+        email = request.POST.get('EMAIL_CREATE')
+        first_name = request.POST.get('FIRSTNAME_CREATE')
+        last_name = request.POST.get('LASTNAME_CREATE')
+        phone = request.POST.get('PHONE_CREATE')
+        password_create = request.POST.get('PASSWORD_CREATE')
+        password_confirm = request.POST.get('PASSWORD_CONFIRM')
+        if password_create == password_confirm:
+            user = Customer.objects.create_user(
+                email=email,
+                password=password_create,
+                name=f'{first_name} {last_name}',
+                phone_number=phone,
+                first_name=first_name,
+                last_name=last_name
+            )
+            login(request, user)
+            return redirect(reverse('main:cabinet'), kwargs={})
+        else:
+            return HttpResponse('Passwords is different!')
+
+    else:
+        return render(request, 'main/index.html', {})

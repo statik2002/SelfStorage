@@ -25,8 +25,8 @@ class CustomerManager(BaseUserManager):
 class Customer(AbstractUser):
     username = None
     email = models.EmailField(max_length=256, unique=True)
-    first_name = None
-    last_name = None
+    first_name = models.CharField(max_length=256, null=True, blank=True)
+    last_name = models.CharField(max_length=256, null=True, blank=True)
     name = models.CharField(
         'Имя пользователя',
         max_length=100,
@@ -42,6 +42,8 @@ class Customer(AbstractUser):
         'Дата регистрации',
         default=timezone.now
     )
+    avatar = models.ImageField(blank=True, null=True, upload_to='avatars/')
+
     REQUIRED_FIELDS = ['name']
     USERNAME_FIELD = 'email'
 
