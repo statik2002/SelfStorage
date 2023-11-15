@@ -14,12 +14,14 @@ class StorageAdmin(admin.ModelAdmin):
         'title',
         'phone',
         'email',
+        'city',
         'address',
     ]
     list_display = [
         'title',
         'phone',
         'email',
+        'city',
         'address',
     ]
 
@@ -35,6 +37,7 @@ class BoxAdmin(admin.ModelAdmin):
         'title',
         'storage',
         'price',
+        'floor',
         'length',
         'weigth',
         'heigth',

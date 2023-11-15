@@ -67,6 +67,10 @@ class Storage(models.Model):
     description = models.TextField(
         verbose_name='Описание'
     )
+    city = models.CharField(
+        max_length=50,
+        verbose_name='Город'
+    )
     address = models.CharField(
         max_length=200,
         verbose_name='Адрес склада'
@@ -120,6 +124,9 @@ class Box(models.Model):
         max_digits=8,
         decimal_places=1,
         verbose_name='Стоимость'
+    )
+    floor = models.IntegerField(
+        verbose_name='Этаж'
     )
     length = models.IntegerField(
         verbose_name='Длина'
