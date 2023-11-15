@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -86,9 +87,15 @@ def cabinet(request):
         user.phone_number = phone_number
         user.first_name = first_name
         user.last_name = last_name
-        user.save()
-
-        return render(request, 'main/my-rent.html', {})
+        try:
+            user.save()
+            return render(request, 'main/my-rent.html', {})
+        except IntegrityError as e:
+            if 'unique constraint' in str(e.args).lower():
+                context = {
+                    'error': 'Такой телефон уже есть!'
+                }
+                return render(request, 'main/my-rent.html', context)
     else:
         return render(request, 'main/my-rent.html', {})
 

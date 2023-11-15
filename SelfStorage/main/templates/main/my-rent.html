@@ -26,6 +26,9 @@
 							<h4>{{ user.first_name }} {{ user.last_name }}</h4>
 						</div>
 						<div class="col-12 col-sm-7 d-flex flex-column">
+							{% if error %}
+							<span>{{error}}</span>
+							{% endif %}
 							<form method="post" action="{% url 'main:cabinet' %}" id="form">
 								{% csrf_token %}
 								<label class="fs_24 SelfStorage_green ms-2" for="EMAIL">E-mail</label>
