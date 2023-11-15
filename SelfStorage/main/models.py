@@ -89,13 +89,13 @@ class Storage(models.Model):
         verbose_name='Карта'
     )
     temperature = models.DecimalField(
-        max_digits=2,
-        decimal_places=1,
+        max_digits=3,
+        decimal_places=2,
         verbose_name='Температура на складе'
     )
     heigth = models.DecimalField(
         max_digits=3,
-        decimal_places=1,
+        decimal_places=2,
         verbose_name='Высота потолка'
     )
 
