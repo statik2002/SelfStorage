@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -113,7 +115,8 @@ def cabinet(request):
     else:
 
         storage_status = Status.objects.all().exclude(title='Хранение закончено')
-        query = Q(renter=request.user) and Q(status__in=storage_status)
+        current_user = get_object_or_404(Customer, email=request.user.email)
+        query = Q(renter=current_user) & Q(status__in=storage_status)
         rents = Rent.objects.filter(query).prefetch_related('renter').prefetch_related('box')
 
         my_rent = []
@@ -169,7 +172,7 @@ def close_box(request, box_id):
 
 def continue_rent(request):
     if request.method == 'POST':
-        new_date = datetime.datetime.strptime(request.POST.get('TO_DATE'), "%Y-%m-%d").date()
+        new_date = datetime.strptime(request.POST.get('TO_DATE'), "%Y-%m-%d").date()
         box = get_object_or_404(Box, pk=request.POST.get('BOX_ID'))
 
         rent = get_object_or_404(Rent, box=box)
