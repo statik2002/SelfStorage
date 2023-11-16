@@ -23,4 +23,5 @@ urlpatterns = [
     path('order/', views.order, name='order'),
     path('close_box/<int:box_id>', views.close_box, name='close_box'),
     path('continue_rent/', views.continue_rent, name='continue_rent'),
+    path('upload_avatar/', views.upload_avatar, name='upload_avatar'),
 ]

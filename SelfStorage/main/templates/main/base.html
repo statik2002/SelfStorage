@@ -36,9 +36,9 @@
 				<li class="nav-item dropdown me-5">
 					<a class="nav-link" type="button" href="#" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 						{% if not user.avatar %}
-							<img src="{% static 'img/no_avatar.png' %}" class="rounded-pill mb-3" alt="" height="35">
+							<img src="{% static 'img/no_avatar.png' %}" class="rounded-pill mb-3" alt="" height="35px">
 						{% else %}
-							<img src="{{ user.avatar.url }}" class="rounded-pill mb-3" alt="" style="width: 180px; height: 180px">
+							<img src="{{ user.avatar.url }}" class="rounded-pill mb-3" alt="" height="35px">
 						{% endif %}
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuAvatar">

@@ -29,6 +29,26 @@
 			</div>
 		</div>
 	</aside>
+	<aside class="modal fade" id="UploadAvatar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+			<div class="modal-content">
+				<div class="modal-header border-0">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body d-flex justify-content-center align-items-center">
+					<form class="d-flex flex-column align-items-center" style="max-width: 420px" action="{% url 'main:upload_avatar' %}" method="post" enctype="multipart/form-data">
+						{% csrf_token %}
+						<h1 class="modal-title text-center fw-bold mb-3">Загрузить аватар</h1>
+						<input type="file" required name="AVATAR" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey">
+						<button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Загрузить</button>
+						<!--
+						<span>Уже зарегистрированы? <a href="#SignModal" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#SignModal" data-bs-dismiss="modal" aria-label="Close">Войти в личный кабинет</a></span>
+						-->
+					</form>
+				</div>
+			</div>
+		</div>
+	</aside>
 	<div class="row" role="tablist">
 		<div class="col-lg-3 d-flex flex-column nav nav-pills">
 			<button class="ps-0 btn bg-white fs_24 shadow-none SelfStorage_orange SelfStorage_tab active" id="LK-tab" data-bs-toggle="pill" data-bs-target="#LK" type="button" role="tab" aria-controls="LK" aria-selected="true">Личный кабинет</button>
@@ -42,10 +62,11 @@
 					<div class="row">
 						<div class="col-12 col-sm-5 d-flex flex-column align-items-center">
 							{% if not user.avatar %}
-							<img src="{% static 'img/no_avatar.png' %}" class="rounded-pill mb-3" alt="" style="width: 180px; height: 180px">
+							<img src="{% static 'img/no_avatar.png' %}" class="rounded-pill mb-3" alt="" style="width: 150px; height: 150px">
 							{% else %}
-							<img src="{{ user.avatar.url }}" class="rounded-pill mb-3" alt="" style="width: 180px; height: 180px">
+							<img src="{{ user.avatar.url }}" class="rounded-pill mb-3" alt="" style="width: 150px; height: 150px">
 							{% endif %}
+							<a href="" class="btn fs_24 shadow-none text-decoration-none SelfStorage_grey SelfStorage_tab" data-bs-toggle="modal" data-bs-target="#UploadAvatar" data-bs-dismiss="modal" aria-label="Close">Загрузить аватар</a>
 							<h4>{{ user.first_name }} {{ user.last_name }}</h4>
 						</div>
 						<div class="col-12 col-sm-7 d-flex flex-column">
@@ -120,7 +141,8 @@
 								<h4 class="SelfStorage_grey my-3">Срок Вашей аренды подходит к концу :(<br>Вы можете продлить аренду или забрать вещи до
 									{{rent.end_date}} включительно.</h4>
 							{% endif %}
-							<h4>Статус: {{ rent.status }}</h4>
+							<h4 class="SelfStorage_green">Статус</h4>
+							<h4>{{ rent.status }}</h4>
 							<h4 class="SelfStorage_green">Мой склад №{{ forloop.counter }}</h4>
 							<h4>{{ rent.box.storage.address }}</h4>
 							<h4 class="SelfStorage_green">Мой бокс</h4>

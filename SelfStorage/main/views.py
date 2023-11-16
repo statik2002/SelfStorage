@@ -333,3 +333,36 @@ def order(request):
 
     }
     return render(request, 'main/order.html', context)
+
+
+def upload_avatar(request):
+    if request.method == 'POST':
+        image = request.FILES.get('AVATAR')
+
+        user = request.user
+        user.avatar = image
+        user.save()
+
+        storage_status = Status.objects.all().exclude(title='Хранение закончено')
+        query = Q(renter=request.user) and Q(status__in=storage_status)
+        rents = Rent.objects.filter(query).prefetch_related('renter').prefetch_related('box')
+
+        my_rent = []
+        for rent in rents:
+            rent_item = {
+                'renter': rent.renter,
+                'box': rent.box,
+                'start_date': rent.start_date,
+                'end_date': rent.end_date,
+                'status': rent.status,
+                'delta': int((timezone.now().date() - rent.end_date).total_seconds() / 86400)
+            }
+            my_rent.append(rent_item)
+
+        context = {
+            'my_rent': my_rent
+        }
+
+        return render(request, 'main/my-rent.html', context)
+
+
