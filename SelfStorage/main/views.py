@@ -1,5 +1,5 @@
-import datetime
-
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.db.models import Q
@@ -11,6 +11,11 @@ from django.contrib import messages
 from django.utils import timezone
 
 from main.models import Customer, Storage, Box, Rent, Status
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from main.models import Customer
+
+from .tasks import send_email
 
 
 def index(request):
@@ -251,7 +256,7 @@ def user_registration(request):
 
 
 def contacts(request):
-
+    send_email.delay('vladpap@mail.ru')
     context = {
 
     }
