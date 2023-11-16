@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.utils import timezone
 
-from main.models import Customer, Storage, Box, Rent, Status
+from main.models import Customer, Storage, Box, Rent, Status, Image
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from main.models import Customer
@@ -34,8 +34,24 @@ def index(request):
 
 def boxes_view(request):
 
-    context = {
+    storages = Storage.objects.all().prefetch_related('box').prefetch_related('image')
+    store_db = []
+    for storage in storages:
+        store_item = {
+            'store': storage,
+            'boxes_count': storage.box.count,
+            'image': storage.image.all().first()
+        }
+        store_db.append(store_item)
 
+    rent_boxes = [rent.box.id for rent in Rent.objects.all()]
+
+    free_boxes = Box.objects.exclude(pk__in=rent_boxes)
+
+    context = {
+        'free_boxes': free_boxes,
+        'storages': storages,
+        'store_db': store_db
     }
 
     return render(request, 'main/boxes.html', context)
