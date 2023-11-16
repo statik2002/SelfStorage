@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -5,6 +7,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
+from django.utils import timezone
+
 from main.models import Customer, Storage, Box, Rent
 
 
@@ -102,10 +106,22 @@ def cabinet(request):
                 return render(request, 'main/my-rent.html', context)
     else:
 
-        rents = Rent.objects.filter(renter=request.user)
+        rents = Rent.objects.filter(renter=request.user).prefetch_related('renter').prefetch_related('box')
+
+        my_rent = []
+        for rent in rents:
+            rent_item = {
+                'renter': rent.renter,
+                'box': rent.box,
+                'start_date': rent.start_date,
+                'end_date': rent.end_date,
+                'status': rent.status,
+                'delta': int((timezone.now().date() - rent.end_date).total_seconds()/86400)
+            }
+            my_rent.append(rent_item)
 
         context = {
-            'rents': rents
+            'my_rent': my_rent
         }
 
         return render(request, 'main/my-rent.html', context)

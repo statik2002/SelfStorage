@@ -77,8 +77,8 @@
 				<div class="tab-pane fade" id="Rent" role="tabpanel" aria-labelledby="Rent-tab">
 					<h1 class="fw-bold SelfStorage_green mb-5">Добрый день, {{user.first_name}}!</h1>
 					<a href="#" class="SelfStorage_orange">История аренды</a>
-					<h4 class="SelfStorage_grey my-3">Срок Вашей аренды подходит к концу :(<br>Вы можете продлить аренду или забрать вещи до 28 июня 2022 года включительно.</h4>
 					<!--
+					<h4 class="SelfStorage_grey my-3">Срок Вашей аренды подходит к концу :(<br>Вы можете продлить аренду или забрать вещи до 28 июня 2022 года включительно.</h4>
 					<div class="mb-5">
 						<h4 class="SelfStorage_green">Мой склад №1</h4>
 						<h4>Одинцово, ул. Северная, д. 36</h4>
@@ -91,8 +91,12 @@
 						<a href="#" class="SelfStorage_orange">Нужна помощь?</a>
 					</div>
 					-->
-					{% for rent in rents %}
+					{% for rent in my_rent %}
 						<div class="mb-5">
+							{% if rent.delta >= -1 %}
+								<h4 class="SelfStorage_grey my-3">Срок Вашей аренды подходит к концу :(<br>Вы можете продлить аренду или забрать вещи до
+									{{rent.end_date}} включительно.</h4>
+							{% endif %}
 							<h4 class="SelfStorage_green">Мой склад №{{ forloop.counter }}</h4>
 							<h4>{{ rent.box.storage.address }}</h4>
 							<h4 class="SelfStorage_green">Мой бокс</h4>
