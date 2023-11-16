@@ -6,6 +6,29 @@
 {% endblock title %}
 {% block content %}
 <main class="container mt-header">
+	<aside class="modal fade" id="ContinueRent" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+			<div class="modal-content">
+				<div class="modal-header border-0">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body d-flex justify-content-center align-items-center">
+					<form class="d-flex flex-column align-items-center" style="max-width: 420px" action="{% url 'main:continue_rent' %}" method="post">
+						{% csrf_token %}
+						<h1 class="modal-title text-center fw-bold mb-3">Продлить аренду</h1>
+						<input type="hidden" name="next" value="{{ request.path }}">
+						<input type="hidden" name="BOX_ID" value="" class="box_aside">
+						<input type="date" required name="TO_DATE" id="date" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey">
+						<span class="fw-light SelfStorage_grey">Нажимая на кнопку, вы подтверждаете свое <a href="{% url 'main:agreement' %}" class="SelfStorage_grey" target="_blank">согласие на обработку персональных данных</a></span>
+						<button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Продлить</button>
+						<!--
+						<span>Уже зарегистрированы? <a href="#SignModal" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#SignModal" data-bs-dismiss="modal" aria-label="Close">Войти в личный кабинет</a></span>
+						-->
+					</form>
+				</div>
+			</div>
+		</div>
+	</aside>
 	<div class="row" role="tablist">
 		<div class="col-lg-3 d-flex flex-column nav nav-pills">
 			<button class="ps-0 btn bg-white fs_24 shadow-none SelfStorage_orange SelfStorage_tab active" id="LK-tab" data-bs-toggle="pill" data-bs-target="#LK" type="button" role="tab" aria-controls="LK" aria-selected="true">Личный кабинет</button>
@@ -97,14 +120,25 @@
 								<h4 class="SelfStorage_grey my-3">Срок Вашей аренды подходит к концу :(<br>Вы можете продлить аренду или забрать вещи до
 									{{rent.end_date}} включительно.</h4>
 							{% endif %}
+							<h4>Статус: {{ rent.status }}</h4>
 							<h4 class="SelfStorage_green">Мой склад №{{ forloop.counter }}</h4>
 							<h4>{{ rent.box.storage.address }}</h4>
 							<h4 class="SelfStorage_green">Мой бокс</h4>
 							<h4>№{{ rent.box.title }}</h4>
 							<h4 class="SelfStorage_green">Срок аренды</h4>
 							<h4>{{ rent.start_date }} - {{ rent.end_date }}</h4>
-							<div><button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Продлить аренду</button></div>
+							<input type="hidden" value="{{rent.box.id}}" class="box">
+							<div>
+								<a href="#" class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3 link" data-bs-toggle="modal" data-bs-target="#ContinueRent">Продлить аренду</a>
+								<!--
+								<button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Продлить аренду</button>
+								-->
+							</div>
+							<a href="{% url 'main:close_box' rent.box.id %}" class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange mb-3" role="button" aria-disabled="true">Открыть бокс</a>
+							<!--
 							<div><button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange mb-3">Открыть бокс</button></div>
+							-->
+							<br>
 							<a href="#" class="SelfStorage_orange">Нужна помощь?</a>
 						</div>
 					{% endfor %}
@@ -127,3 +161,19 @@
 	</div>
 </main>
 {% endblock content %}
+{% block add_scripts %}
+<script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
+<script>
+	$('.link').click(function(e) {
+      e.preventDefault();
+      var parent = $(this).closest('.mb-5');
+      var boxID = $(parent).children('.box').val();
+      var linkValue = $(this).text();
+      $('.box_aside').val(boxID);
+      let now = new Date();
+      let today = now.getDate()  + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
+      console.log(today);
+      $('#date').val(today);
+    });
+</script>
+{% endblock add_scripts %}

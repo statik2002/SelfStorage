@@ -2,14 +2,15 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
 from django.utils import timezone
 
-from main.models import Customer, Storage, Box, Rent
+from main.models import Customer, Storage, Box, Rent, Status
 
 
 def index(request):
@@ -106,7 +107,9 @@ def cabinet(request):
                 return render(request, 'main/my-rent.html', context)
     else:
 
-        rents = Rent.objects.filter(renter=request.user).prefetch_related('renter').prefetch_related('box')
+        storage_status = Status.objects.all().exclude(title='Хранение закончено')
+        query = Q(renter=request.user) and Q(status__in=storage_status)
+        rents = Rent.objects.filter(query).prefetch_related('renter').prefetch_related('box')
 
         my_rent = []
         for rent in rents:
@@ -124,6 +127,93 @@ def cabinet(request):
             'my_rent': my_rent
         }
 
+        return render(request, 'main/my-rent.html', context)
+
+
+def close_box(request, box_id):
+
+    box = get_object_or_404(Box, id=box_id)
+
+    rent = get_object_or_404(Rent, box=box)
+
+    close_status = get_object_or_404(Status, title='Хранение закончено')
+
+    rent.status = close_status
+    rent.save()
+
+    query = Q(renter=request.user) and Q(status__id=5)
+    rents = Rent.objects.filter(query).prefetch_related('renter').prefetch_related('box')
+
+    my_rent = []
+    for rent in rents:
+        rent_item = {
+            'renter': rent.renter,
+            'box': rent.box,
+            'start_date': rent.start_date,
+            'end_date': rent.end_date,
+            'status': rent.status,
+            'delta': int((timezone.now().date() - rent.end_date).total_seconds() / 86400)
+        }
+        my_rent.append(rent_item)
+
+    context = {
+        'my_rent': my_rent
+    }
+    return render(request, 'main/my-rent.html', context)
+
+
+def continue_rent(request):
+    if request.method == 'POST':
+        new_date = datetime.datetime.strptime(request.POST.get('TO_DATE'), "%Y-%m-%d").date()
+        box = get_object_or_404(Box, pk=request.POST.get('BOX_ID'))
+
+        rent = get_object_or_404(Rent, box=box)
+
+        rent.end_date = new_date
+        rent.save()
+
+        storage_status = Status.objects.all().exclude(title='Хранение закончено')
+        query = Q(renter=request.user) and Q(status__in=storage_status)
+        rents = Rent.objects.filter(query).prefetch_related('renter').prefetch_related('box')
+
+        my_rent = []
+        for rent in rents:
+            rent_item = {
+                'renter': rent.renter,
+                'box': rent.box,
+                'start_date': rent.start_date,
+                'end_date': rent.end_date,
+                'status': rent.status,
+                'delta': int((timezone.now().date() - rent.end_date).total_seconds() / 86400)
+            }
+            my_rent.append(rent_item)
+
+        context = {
+            'my_rent': my_rent
+        }
+
+        return render(request, 'main/my-rent.html', context)
+
+    else:
+        storage_status = Status.objects.all().exclude(title='Хранение закончено')
+        query = Q(renter=request.user) and Q(status__in=storage_status)
+        rents = Rent.objects.filter(query).prefetch_related('renter').prefetch_related('box')
+
+        my_rent = []
+        for rent in rents:
+            rent_item = {
+                'renter': rent.renter,
+                'box': rent.box,
+                'start_date': rent.start_date,
+                'end_date': rent.end_date,
+                'status': rent.status,
+                'delta': int((timezone.now().date() - rent.end_date).total_seconds() / 86400)
+            }
+            my_rent.append(rent_item)
+
+        context = {
+            'my_rent': my_rent
+        }
         return render(request, 'main/my-rent.html', context)
 
 
