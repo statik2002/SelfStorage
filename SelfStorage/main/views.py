@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
-from main.models import Customer
+from main.models import Customer, Storage, Box, Rent
 
 
 def index(request):
@@ -101,7 +101,14 @@ def cabinet(request):
                 }
                 return render(request, 'main/my-rent.html', context)
     else:
-        return render(request, 'main/my-rent.html', {})
+
+        rents = Rent.objects.filter(renter=request.user)
+
+        context = {
+            'rents': rents
+        }
+
+        return render(request, 'main/my-rent.html', context)
 
 
 def user_registration(request):
