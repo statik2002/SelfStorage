@@ -136,32 +136,38 @@
 					</div>
 					-->
 					{% for rent in my_rent %}
-						<div class="mb-5">
-							{% if rent.delta >= -1 %}
-								<h4 class="SelfStorage_grey my-3">Срок Вашей аренды подходит к концу :(<br>Вы можете продлить аренду или забрать вещи до
-									{{rent.end_date}} включительно.</h4>
-							{% endif %}
-							<h4 class="SelfStorage_green">Статус</h4>
-							<h4>{{ rent.status }}</h4>
-							<h4 class="SelfStorage_green">Мой склад №{{ forloop.counter }}</h4>
-							<h4>{{ rent.box.storage.address }}</h4>
-							<h4 class="SelfStorage_green">Мой бокс</h4>
-							<h4>№{{ rent.box.title }}</h4>
-							<h4 class="SelfStorage_green">Срок аренды</h4>
-							<h4>{{ rent.start_date }} - {{ rent.end_date }}</h4>
-							<input type="hidden" value="{{rent.box.id}}" class="box">
-							<div>
-								<a href="#" class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3 link" data-bs-toggle="modal" data-bs-target="#ContinueRent">Продлить аренду</a>
+						<div  class="row">
+							<div class="col-md-8">
+								{% if rent.delta >= -1 %}
+									<h4 class="SelfStorage_grey my-3">Срок Вашей аренды подходит к концу :(<br>Вы можете продлить аренду или забрать вещи до
+										{{rent.end_date}} включительно.</h4>
+								{% endif %}
+								<h4 class="SelfStorage_green">Статус</h4>
+								<h4>{{ rent.status }}</h4>
+								<h4 class="SelfStorage_green">Мой склад №{{ forloop.counter }}</h4>
+								<h4>{{ rent.box.storage.address }}</h4>
+								<h4 class="SelfStorage_green">Мой бокс</h4>
+								<h4>№{{ rent.box.title }}</h4>
+								<h4 class="SelfStorage_green">Срок аренды</h4>
+								<h4>{{ rent.start_date }} - {{ rent.end_date }}</h4>
+								
+								<input type="hidden" value="{{rent.box.id}}" class="box">
+								<div>
+									<a href="#" class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3 link" data-bs-toggle="modal" data-bs-target="#ContinueRent">Продлить аренду</a>
+									<!--
+									<button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Продлить аренду</button>
+									-->
+								</div>
+								<a href="{% url 'main:close_box' rent.box.id %}" class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange mb-3" role="button" aria-disabled="true">Открыть бокс</a>
 								<!--
-								<button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Продлить аренду</button>
+								<div><button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange mb-3">Открыть бокс</button></div>
 								-->
+								<br>
+								<a href="#" class="SelfStorage_orange">Нужна помощь?</a>
 							</div>
-							<a href="{% url 'main:close_box' rent.box.id %}" class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange mb-3" role="button" aria-disabled="true">Открыть бокс</a>
-							<!--
-							<div><button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange mb-3">Открыть бокс</button></div>
-							-->
-							<br>
-							<a href="#" class="SelfStorage_orange">Нужна помощь?</a>
+							<div class="col-md-4">
+								<img src="data:image/rgb;base64, {{ rent.qrcode }}" width = "200px" alt="qrcode">
+							</div>
 						</div>
 					{% endfor %}
 					<!--

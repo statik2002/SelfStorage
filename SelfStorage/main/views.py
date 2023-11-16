@@ -18,6 +18,9 @@ from django.urls import reverse
 from main.models import Customer
 
 from .tasks import send_email
+import qrcode
+import base64
+from io import BytesIO
 
 
 def index(request):
@@ -121,13 +124,22 @@ def cabinet(request):
 
         my_rent = []
         for rent in rents:
+            qc_img = qrcode.make(
+                'email: ' + str(rent.renter.email) +
+                ', box_id: ' + str(rent.box.id) +
+                ', date: ' + str(rent.start_date) +
+                ' - ' + str(datetime.now().day)
+            )
+            buffered = BytesIO()
+            qc_img.save(buffered, format="PNG")
             rent_item = {
                 'renter': rent.renter,
                 'box': rent.box,
                 'start_date': rent.start_date,
                 'end_date': rent.end_date,
                 'status': rent.status,
-                'delta': int((timezone.now().date() - rent.end_date).total_seconds()/86400)
+                'delta': int((timezone.now().date() - rent.end_date).total_seconds()/86400),
+                'qrcode': base64.b64encode(buffered.getvalue()).decode("ascii")
             }
             my_rent.append(rent_item)
 
