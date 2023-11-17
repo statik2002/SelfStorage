@@ -16,6 +16,7 @@ from main.models import Customer, Storage, Box, Rent, Status, Image
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from main.models import Customer
+from .forms import CalcForm
 
 from .tasks import send_email
 import qrcode
@@ -333,9 +334,46 @@ def tariff(request):
 
 def calc(request):
 
-    context = {
+    form = CalcForm()
+    context = {'form': form}
 
-    }
+    if request.method == 'POST':
+       # storage = request.POST.get('storage')
+        square = request.POST.get('square')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        delivery = request.POST.get('delivery')
+        loaders = request.POST.get('loaders')
+
+        rent_boxes = [rent.box.id for rent in Rent.objects.all()]
+        free_boxes = Box.objects.exclude(pk__in=rent_boxes)
+
+        date = datetime.strptime(end_date, "%Y-%m-%d") - datetime.strptime(start_date, "%Y-%m-%d")
+        rise_price = 0
+
+        if delivery:
+            rise_price += 1500
+
+        if loaders:
+            rise_price += 3000
+
+        boxes = []
+        for free_box in free_boxes:
+            if float(square) <= free_box.calc_square():
+                price = int(free_box.price / 30 * date.days)
+                boxes.append({
+                'id': free_box.pk,
+                'title': free_box.title,
+                'floor': free_box.floor,
+                'city': free_box.storage.city,
+                'length': free_box.length,
+                'weigth': free_box.weigth,
+                'address': free_box.storage.address,
+                'price': price + rise_price
+            })
+
+        context['boxes'] = boxes
+    request.session['data'] = request.POST
     return render(request, 'main/calc.html', context)
 
 

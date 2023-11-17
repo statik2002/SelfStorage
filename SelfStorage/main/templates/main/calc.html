@@ -1,8 +1,42 @@
 {% extends './base.html' %}
-
 {% load static %}
+{% load tag_extras %}
 {% block content %}
 <main class="container mt-header">
-    <h1>Рассчитать стоимость</h1>
+  <div class="modal-body d-flex justify-content-center align-items-center">
+    <form class="d-flex flex-column align-items-center" style="max-width: 450px" action="{% url 'main:calc' %}" method="post">
+      {% csrf_token %}
+      <h1 class="modal-title text-center fw-bold mb-3">Рассчитать стоимость</h1>
+      {{ form }}
+      <button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Рассчитать стоимость</button>
+    </form>
+  </div>
+  {% if boxes %}
+    {% for box in boxes%}
+      <a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" method="post">
+        <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center align-items-center">
+          <div class="row py-1 px-1 mt-1">
+            <div class="col text-left col-12">
+              <span class="SelfStorage_green fs_16 me-2">{{box.city}}</span><span class="fs_16">{{box.address}}</span>
+            </div>
+          </div>
+          <div class="row py-1 px-1 mt-1">
+            <div class="col text-right col-12">
+              <span class="SelfStorage_green fs_16 me-2">{{box.floor}} Этаж</span><span class="fs_16">№{{box.title}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2 d-flex justify-content-center align-items-center">
+          <span class="fs_24">{% widthratio box.length|to_meters 1 box.weigth|to_meters %} м²</span>
+        </div>
+        <div class="col-6 col-md-4 col-lg-4 d-flex justify-content-center align-items-center">
+          <span class="fs_24">{{box.length|to_meters}} х {{box.weigth|to_meters}} х {% widthratio box.length|to_meters 1 box.weigth|to_meters %} м²</span>
+        </div>
+        <div class="col-12 col-lg-2">
+          <span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8">{{box.price}} ₽</span>
+        </div>
+      </a>
+    {% endfor %}
+  {% endif %}
 </main>
 {% endblock content %}
