@@ -6,6 +6,28 @@
 <title>SelfStorage - Boxes</title>
 {% endblock title %}
 {% block content %}
+<aside class="modal fade" id="OrderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+		<div class="modal-content">
+			<div class="modal-header border-0">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex justify-content-center align-items-center">
+				<form class="d-flex flex-column align-items-center" style="max-width: 420px" action="{% url 'main:order' %}" method="post">
+					{% csrf_token %}
+					<h1 class="modal-title text-center fw-bold mb-3">Заказ бокса для хранения</h1>
+					<input type="text" name="BOX_ID" value="" id="box_id">
+					<input type="date" required name="FROM_DATE" id="from_date" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey">
+					<input type="date" required name="TO_DATE" id="to_date" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey">
+					<button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Заказать</button>
+					<!--
+					<span>Вспомнили пароль?  <a href="#SignModal" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#SignModal" data-bs-dismiss="modal" aria-label="Close">Отмена</a></span>
+					-->
+				</form>
+			</div>
+		</div>
+	</div>
+</aside>
 <main class="container mt-header">
 	<article class="row">
 		<div class="col-12 col-lg-6 mb-3 mb-lg-0">
@@ -235,7 +257,12 @@
 										<span class="SelfStorage_grey mb-3">Оплата за месяц</span>
 									</div>
 									<div class="d-flex flex-column align-items-center align-items-lg-start">
+										<!--
+										<a href="#" class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3 link" data-bs-toggle="modal" data-bs-target="#OrderModal">Арендовать бокс</a>
+										-->
+
 										<a href="#pills-tab-{{store.store.id}}" role="button" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Арендовать бокс</a>
+
 										<button class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange">Позвонить мне</button>
 									</div>
 									<a href="#" class="text-center text-lg-start mt-4 SelfStorage_orange">Нужна помощь?</a>
@@ -370,7 +397,7 @@
 				<div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-home-tab">
 					{% for storage in store_db %}
 						{% for box in storage.available_boxes %}
-								<a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink">
+								<a href="#" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" data-bs-toggle="modal" data-bs-target="#OrderModal">
 									<div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center align-items-center">
 										<div class="row py-1 px-1 mt-1">
 											<div class="col text-left col-12">
@@ -389,8 +416,12 @@
 									<div class="col-6 col-md-4 col-lg-4 d-flex justify-content-center align-items-center">
 										<span class="fs_24">{{box.length|to_meters}} х {{box.weigth|to_meters}} х {% widthratio box.length|to_meters 1 box.weigth|to_meters %} м²</span>
 									</div>
-									<div class="col-12 col-lg-2">
-										<span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8">От {{box.price}} ₽</span>
+									<div class="col-12 col-lg-2 data">
+										<!--
+										<a href="#" class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3 link" data-bs-toggle="modal" data-bs-target="#OrderModal">Арендовать От {{box.price}} ₽</a>
+										-->
+										<input type="hidden" value="{{box.id}}" class="box">
+										<span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8 link" data-bs-toggle="modal" data-bs-target="#OrderModal">От {{box.price}} ₽</span>
 									</div>
 								</a>
 						{% endfor %}
@@ -499,5 +530,20 @@
 	var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
 		return new bootstrap.Popover(popoverTriggerEl)
 	})
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
+<script>
+	$('.link').click(function(e) {
+      e.preventDefault();
+      var parent = $(this).closest('.data');
+      console.log(parent);
+      var boxID = $(parent).children('.box').val();
+      console.log(boxID);
+      $('#box_id').val(boxID);
+      let now = new Date();
+      let today = now.getDate()  + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
+      console.log(today);
+      $('#from_date').val(today);
+    });
 </script>
 {% endblock add_scripts %}

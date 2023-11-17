@@ -3,6 +3,14 @@
 {% load static %}
 {% block content %}
 <main class="container mt-header">
-    <h1>Заказ</h1>
+    <h1>Ваш Заказ:</h1>
+    <span>
+        <ul>
+            <li>Box: {{ rent.box.title }}</li>
+            <li>Адрес: {{ rent.box.storage.city }} - {{ rent.box.storage.address }}</li>
+            <li>C {{ rent.start_date }} До {{ rent.end_date }}</li>
+            <li>Статус заказа: {{ rent.status.title }}</li>
+        </ul>
+    </span>
 </main>
 {% endblock content %}

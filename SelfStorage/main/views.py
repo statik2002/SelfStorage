@@ -177,6 +177,7 @@ def cabinet(request):
         return render(request, 'main/my-rent.html', context)
 
 
+@login_required
 def close_box(request, box_id):
 
     box = get_object_or_404(Box, id=box_id)
@@ -209,6 +210,7 @@ def close_box(request, box_id):
     return render(request, 'main/my-rent.html', context)
 
 
+@login_required
 def continue_rent(request):
     if request.method == 'POST':
         new_date = datetime.strptime(request.POST.get('TO_DATE'), "%Y-%m-%d").date()
@@ -368,10 +370,41 @@ def forget_password(request):
 
 
 def order(request):
-    context = {
 
-    }
-    return render(request, 'main/order.html', context)
+    if not request.user:
+        context = {
+
+        }
+        return redirect(reverse('main:registration'), kwargs={})
+
+    if request.method == 'POST':
+
+        box = get_object_or_404(Box, pk=request.POST.get('BOX_ID'))
+        from_date = datetime.strptime(request.POST.get('FROM_DATE'), "%Y-%m-%d").date()
+        to_date = datetime.strptime(request.POST.get('TO_DATE'), "%Y-%m-%d").date()
+
+        status_id = get_object_or_404(Status, title='Ожидание оплаты')
+
+        rent = Rent.objects.create(
+            renter=request.user,
+            box=box,
+            start_date=from_date,
+            end_date=to_date,
+            status=status_id
+        )
+        rent.save()
+
+        context = {
+            'rent': rent
+        }
+        return render(request, 'main/order.html', context)
+
+    else:
+
+        context = {
+
+        }
+        return render(request, 'main/order.html', context)
 
 
 def upload_avatar(request):
