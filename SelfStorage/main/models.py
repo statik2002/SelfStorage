@@ -142,7 +142,7 @@ class Box(models.Model):
         return self.title
 
     def calc_square(self):
-        return int((self.length * self.weigth)/1000/10)
+        return (self.length * self.weigth)/1000/10
 
     class Meta:
         verbose_name = 'Бокс'
