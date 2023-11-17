@@ -16,6 +16,9 @@ body {
     display: grid;
     grid-template-rows: auto 1fr auto;
 }
+.fs_16 {
+    font-size: 16px;
+}
 .fs_24 {
     font-size: 24px;
 }

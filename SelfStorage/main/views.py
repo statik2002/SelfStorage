@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.db.models import Q, Prefetch
+from django.db.models import Q, Prefetch, Min
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -35,12 +35,23 @@ def index(request):
 def boxes_view(request):
 
     storages = Storage.objects.all().prefetch_related('box').prefetch_related('image')
+    storage_status = Status.objects.all().exclude(title='Хранение закончено')
+    rents = Rent.objects.all().filter(status__in=storage_status).prefetch_related('box')
     store_db = []
     for storage in storages:
+        boxes_in_storage = Box.objects.filter(storage=storage).count()
+        rented_boxes = [rent.box for rent in rents.all() if rent.box.storage == storage]
+        rented_boxes_pk = [rent.box.pk for rent in rents.all() if rent.box.storage == storage]
+        minimal_price = Box.objects.filter(storage=storage).aggregate(Min('price'))
         store_item = {
             'store': storage,
-            'boxes_count': storage.box.count,
-            'image': storage.image.all().first()
+            'available_boxes': Box.objects.filter(storage=storage).exclude(pk__in=rented_boxes_pk),
+            'boxes_count': boxes_in_storage,
+            'rented_boxes': len(rented_boxes),
+            'free_boxes': boxes_in_storage - len(rented_boxes),
+            'image': storage.image.all().first(),
+            'images': storage.image.all(),
+            'min_price': minimal_price
         }
         store_db.append(store_item)
 

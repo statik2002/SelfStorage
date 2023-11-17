@@ -141,6 +141,9 @@ class Box(models.Model):
     def __str__(self) -> str:
         return self.title
 
+    def calc_square(self):
+        return int((self.length * self.weigth)/1000/1000)
+
     class Meta:
         verbose_name = 'Бокс'
         verbose_name_plural = 'Боксы'
