@@ -121,18 +121,21 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = [
         'user',
         'box',
+        'status',
     ]
     list_display = [
         'user',
         'box',
         'start_date',
         'end_date',
+        'status',
         'delivery',
         'loaders',
     ]
     raw_id_fields = [
         'user',
         'box',
+        'status',
     ]
 
 

@@ -286,6 +286,14 @@ class Order(models.Model):
     end_date = models.DateField(
         verbose_name='Дата окончания аренды'
     )
+    status = models.ForeignKey(
+        Status,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name='Статус',
+        related_name='order_status'
+    )
     delivery = models.BooleanField(
         verbose_name='Доставка'
     )
