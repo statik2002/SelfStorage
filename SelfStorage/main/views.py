@@ -418,7 +418,7 @@ def order2(request, box_id):
 
     if request.method == 'POST':
         adress = request.POST.get('address')
-        
+
         delivery = False
         loaders = False
 
@@ -429,6 +429,7 @@ def order2(request, box_id):
         #     loaders = True
 
         Order.objects.create(
+            user=request.user,
             box=box,
             start_date=request.session['data']['start_date'],
             end_date=request.session['data']['end_date'],
