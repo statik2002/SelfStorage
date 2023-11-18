@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.utils import timezone
 
-from main.models import Customer, Storage, Box, Rent, Status, Image
+from main.models import Customer, Storage, Box, Rent, Status, Image, RemindDay
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from main.models import Customer

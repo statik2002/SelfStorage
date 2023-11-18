@@ -93,6 +93,9 @@ class RentAdmin(admin.ModelAdmin):
         'box',
         'status',
     ]
+    list_filter = [
+        'status'
+    ]
 
 
 @admin.register(Status)
