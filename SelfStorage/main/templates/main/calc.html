@@ -6,8 +6,10 @@
   <div class="modal-body d-flex justify-content-center align-items-center">
     <form class="d-flex flex-column align-items-center" style="max-width: 450px" action="{% url 'main:calc' %}" method="post">
       {% csrf_token %}
-      <h1 class="modal-title text-center fw-bold mb-3">Рассчитать стоимость</h1>
-      {{ form }}
+      <h1 class="fw-bold SelfStorage_green mb-5">Рассчитать стоимость</h1>
+      <table>
+        {{ form.as_table }}
+      </table>
       <button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Рассчитать стоимость</button>
     </form>
   </div>
