@@ -338,7 +338,7 @@ def calc(request):
     context = {'form': form}
 
     if request.method == 'POST':
-       # storage = request.POST.get('storage')
+        city = request.POST.get('city')
         square = request.POST.get('square')
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
