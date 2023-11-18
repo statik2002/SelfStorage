@@ -59,6 +59,20 @@ class Customer(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
 
+class City(models.Model):
+    name = models.CharField(
+        max_length=50,
+        verbose_name='Город',
+        unique=True,
+    )
+
+    def __str__(self) -> str:
+        return f'{self.name}'
+
+    class Meta:
+        verbose_name = 'Город'
+        verbose_name_plural = 'Города'
+
 class Storage(models.Model):
     title = models.CharField(
         max_length=50,
@@ -70,6 +84,14 @@ class Storage(models.Model):
     city = models.CharField(
         max_length=50,
         verbose_name='Город'
+    )
+    city_name = models.ForeignKey(
+        City,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name='Город',
+        related_name='storage'
     )
     address = models.CharField(
         max_length=200,
@@ -238,3 +260,44 @@ class UtmMark(models.Model):
     class Meta:
         verbose_name = 'Переход'
         verbose_name_plural = 'Переходы'
+
+
+class Order(models.Model):
+    user = models.ForeignKey(
+        Customer,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name='Пользователь',
+        related_name='order_user'
+    )
+    box = models.ForeignKey(
+        Box,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name='Бокс',
+        related_name='order_box'
+    )
+    start_date = models.DateField(
+        verbose_name='Дата начала аренды'
+    )
+    end_date = models.DateField(
+        verbose_name='Дата окончания аренды'
+    )
+    delivery = models.BooleanField(
+        verbose_name='Доставка'
+    )
+    loaders = models.BooleanField(
+        verbose_name='Грузчики'
+    )
+    text = models.TextField(
+        verbose_name='Примечание'
+    )
+
+    def __str__(self) -> str:
+        return f'{self.user.name} - {self.box.title}'
+
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'

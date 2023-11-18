@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from main.models import Customer
-from main.models import Storage, Box, Status, Rent, Image, UtmMark
+from main.models import Storage, Box, Status, Rent, Image, UtmMark, Order, City
 
 
 @admin.register(Customer)
@@ -35,7 +35,7 @@ class StorageAdmin(admin.ModelAdmin):
         'title',
         'phone',
         'email',
-        'city',
+        'city_name',
         'address',
     ]
     list_display = [
@@ -44,6 +44,9 @@ class StorageAdmin(admin.ModelAdmin):
         'email',
         'city',
         'address',
+    ]
+    raw_id_fields = [
+        'city_name',
     ]
     inlines = [
         ImageInline
@@ -110,4 +113,34 @@ class UtmMarkAdmin(admin.ModelAdmin):
     list_display = [
         'url',
         'count',
+    ]
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    search_fields = [
+        'user',
+        'box',
+    ]
+    list_display = [
+        'user',
+        'box',
+        'start_date',
+        'end_date',
+        'delivery',
+        'loaders',
+    ]
+    raw_id_fields = [
+        'user',
+        'box',
+    ]
+
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    search_fields = [
+        'name',
+    ]
+    list_display = [
+        'name',
     ]
