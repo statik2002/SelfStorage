@@ -1,0 +1,20 @@
+{% extends './base.html' %}
+
+{% load static %}
+{% block content %}
+<main class="container mt-header">
+    <div class="modal-body d-flex">
+        <form class="d-flex flex-column justify-content-center align-items-left"  action="{% url 'main:order2' box.pk %}" method="post">
+          {% csrf_token %}
+          <h1 class="modal-title text-center fw-bold mb-3">Ваш заказ:</h1>
+            <li>Город: {{ box.storage.city }}</li>
+            <li>Бокс: {{ box.title }}</li>
+            <li>Розер бокса: {{ box.length }} X {{ box.length }}</li>
+            <li>Адрес: {{ box.storage.city }} - {{ box.storage.address }}</li>
+            <li>C {{ data.start_date }} До {{ data.end_date }}</li>
+            {{ form }}
+          <button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Заказать</button>
+        </form>
+      </div>
+</main>
+{% endblock content %}

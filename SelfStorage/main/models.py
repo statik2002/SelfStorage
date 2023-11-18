@@ -287,15 +287,19 @@ class Order(models.Model):
         verbose_name='Дата окончания аренды'
     )
     delivery = models.BooleanField(
-        verbose_name='Доставка'
+        verbose_name='Доставка',
+        blank=True,
+        null=True
     )
     loaders = models.BooleanField(
-        verbose_name='Грузчики'
+        verbose_name='Грузчики',
+        blank=True,
+        null=True
     )
     text = models.TextField(
         verbose_name='Примечание',
         blank=True,
-        null=True,
+        null=True
     )
 
     def __str__(self) -> str:
