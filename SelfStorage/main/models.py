@@ -73,6 +73,7 @@ class City(models.Model):
         verbose_name = 'Город'
         verbose_name_plural = 'Города'
 
+
 class Storage(models.Model):
     title = models.CharField(
         max_length=50,
@@ -292,7 +293,9 @@ class Order(models.Model):
         verbose_name='Грузчики'
     )
     text = models.TextField(
-        verbose_name='Примечание'
+        verbose_name='Примечание',
+        blank=True,
+        null=True,
     )
 
     def __str__(self) -> str:
