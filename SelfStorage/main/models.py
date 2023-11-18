@@ -312,3 +312,22 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+
+
+class RemindDay(models.Model):
+    day = models.IntegerField(
+        verbose_name='количество дней'
+    )
+    status = models.OneToOneField(
+        Status,
+        on_delete=models.CASCADE,
+        verbose_name='статус',
+        related_name='remind_day'
+    )
+
+    def __str__(self) -> str:
+        return f'{self.day} - {self.status.title}'
+
+    class Meta:
+        verbose_name = 'Напоминание'
+        verbose_name_plural = 'Напоминания'
