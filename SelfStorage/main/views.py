@@ -345,8 +345,9 @@ def calc(request):
         delivery = request.POST.get('delivery')
         loaders = request.POST.get('loaders')
 
+        storages = Storage.objects.filter(city_name=city)
         rent_boxes = [rent.box.id for rent in Rent.objects.all()]
-        free_boxes = Box.objects.exclude(pk__in=rent_boxes)
+        free_boxes = Box.objects.filter(storage__in=storages).exclude(pk__in=rent_boxes)
 
         date = datetime.strptime(end_date, "%Y-%m-%d") - datetime.strptime(start_date, "%Y-%m-%d")
         rise_price = 0
