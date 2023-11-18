@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0011_city_order_storage_city_name'),
+        ('main', '0013_remindday'),
     ]
 
     operations = [
