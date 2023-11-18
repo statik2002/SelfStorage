@@ -235,3 +235,22 @@ class UtmMark(models.Model):
     class Meta:
         verbose_name = 'Переход'
         verbose_name_plural = 'Переходы'
+
+
+class RemindDay(models.Model):
+    day = models.IntegerField(
+        verbose_name='количество дней'
+    )
+    status = models.OneToOneField(
+        Status,
+        on_delete=models.CASCADE,
+        verbose_name='статус',
+        related_name='remind_day'
+    )
+
+    def __str__(self) -> str:
+        return f'{self.day} - {self.status.title}'
+
+    class Meta:
+        verbose_name = 'Напоминание'
+        verbose_name_plural = 'Напоминания'

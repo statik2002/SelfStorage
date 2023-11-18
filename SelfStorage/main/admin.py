@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from main.models import Customer
-from main.models import Storage, Box, Status, Rent, Image, UtmMark
+from main.models import Storage, Box, Status, Rent, Image, UtmMark, RemindDay
 
 
 @admin.register(Customer)
@@ -90,6 +90,9 @@ class RentAdmin(admin.ModelAdmin):
         'box',
         'status',
     ]
+    list_filter = [
+        'status'
+    ]
 
 
 @admin.register(Status)
@@ -111,3 +114,8 @@ class UtmMarkAdmin(admin.ModelAdmin):
         'url',
         'count',
     ]
+
+
+@admin.register(RemindDay)
+class RemindDayAdmin(admin.ModelAdmin):
+    list_display = ('day', 'status')
