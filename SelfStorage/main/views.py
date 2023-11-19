@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.utils import timezone
 
-from main.models import Customer, Storage, Box, Rent, Status, Image, Order, CallBackOrderStatus, CallBackOrder
+from main.models import Customer, Storage, Box, Rent, Status, Image, Order, CallBackOrderStatus, CallBackOrder, UtmMark
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from main.models import Customer
@@ -519,3 +519,21 @@ def call_me(request):
             'form': form
         }
         return render(request, 'main/callbackorder.html', context)
+
+
+def check_utm(request):
+    get_referer = request.GET.get('utm_source')
+
+    if not get_referer:
+        return reverse('main:index')
+
+    UtmMark.objects.create(
+        check_in_date=datetime.datetime.now(),
+        utm_source=request.GET.get('utm_source'),
+        utm_medium=request.GET.get('utm_medium'),
+        utm_campaign=request.GET.get('utm_campaign'),
+        utm_content=request.GET.get('utm_content'),
+        utm_term=request.GET.get('utm_term')
+    )
+
+    return reverse('index')

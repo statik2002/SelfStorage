@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from main.models import Customer, CallBackOrder, CallBackOrderStatus
 from main.models import Storage, Box, Status, Rent, Image, UtmMark, Order, City, RemindDay
+from main.utils import export_to_csv
 
 
 @admin.register(Customer)
@@ -120,13 +121,13 @@ class StatusAdmin(admin.ModelAdmin):
 
 @admin.register(UtmMark)
 class UtmMarkAdmin(admin.ModelAdmin):
-    search_fields = [
-        'url',
-    ]
-    list_display = [
-        'url',
-        'count',
-    ]
+    list_display = ('utm_source', 'check_in_date', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term')
+
+    fields = ('utm_source', 'check_in_date', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term')
+
+    readonly_fields = ('utm_source', 'check_in_date', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term')
+
+    actions = [export_to_csv]
 
 
 @admin.register(Order)
