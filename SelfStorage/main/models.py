@@ -247,12 +247,12 @@ class Image(models.Model):
 
 
 class UtmMark(models.Model):
-    check_in_date = models.DateTimeField('Время захода', auto_now=True)
     utm_source = models.CharField('Источник UTM', max_length=100, null=True, blank=True)
     utm_medium = models.CharField('Тип траффика', max_length=10, null=True, blank=True)
     utm_campaign = models.CharField('Название компании', max_length=100, null=True, blank=True)
     utm_content = models.CharField('Идентификатор объявления', max_length=250, null=True, blank=True)
     utm_term = models.CharField('Ключевое слово', max_length=100, null=True, blank=True)
+    link_counter = models.IntegerField(verbose_name='Количество переходов', default=0, null=True, blank=True)
 
     def __str__(self) -> str:
         return f'{self.utm_source}'

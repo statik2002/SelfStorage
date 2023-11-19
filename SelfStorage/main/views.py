@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.db.models import Q, Prefetch, Min
 from django.http import HttpResponse, HttpResponseRedirect
@@ -620,13 +621,28 @@ def check_utm(request):
     if not get_referer:
         return reverse('main:index')
 
-    UtmMark.objects.create(
-        check_in_date=timezone.now(),
-        utm_source=request.GET.get('utm_source'),
-        utm_medium=request.GET.get('utm_medium'),
-        utm_campaign=request.GET.get('utm_campaign'),
-        utm_content=request.GET.get('utm_content'),
-        utm_term=request.GET.get('utm_term')
-    )
+    try:
+        mark = UtmMark.objects.get(
+            utm_source=request.GET.get('utm_source'),
+            utm_medium=request.GET.get('utm_medium'),
+            utm_campaign=request.GET.get('utm_campaign'),
+            utm_content=request.GET.get('utm_content'),
+            utm_term=request.GET.get('utm_term')
+        )
 
-    return reverse('main:index')
+        mark.link_counter = mark.link_counter + 1
+        mark.save()
+        return reverse('main:index')
+
+    except ObjectDoesNotExist:
+
+        UtmMark.objects.create(
+            utm_source=request.GET.get('utm_source'),
+            utm_medium=request.GET.get('utm_medium'),
+            utm_campaign=request.GET.get('utm_campaign'),
+            utm_content=request.GET.get('utm_content'),
+            utm_term=request.GET.get('utm_term'),
+            link_counter=1
+        )
+
+        return reverse('main:index')
