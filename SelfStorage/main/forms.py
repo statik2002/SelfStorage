@@ -29,3 +29,10 @@ class CallBackOrderForm(forms.Form):
     last_name = forms.CharField(label='Ваша фамилия', widget=forms.TextInput(attrs={'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey'}))
 
 
+class OrderForm(forms.Form):
+    address = forms.CharField(
+        label='Адрес',
+        required=False,
+        max_length=100
+    )
+    text = forms.CharField(label='Прмечание', required=False, widget=forms.Textarea)

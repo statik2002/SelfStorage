@@ -16,7 +16,7 @@ from main.models import Customer, Storage, Box, Rent, Status, Image, Order, Call
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from main.models import Customer
-from .forms import CalcForm, CallBackOrderForm
+from .forms import CalcForm, CallBackOrderForm, OrderForm
 
 from .tasks import send_email
 import qrcode
@@ -345,19 +345,20 @@ def tariff(request):
 
 def calc(request):
 
-    form = CalcForm()
-    context = {'form': form}
+    context = {}
 
     if request.method == 'POST':
-       # storage = request.POST.get('storage')
+        form = CalcForm(request.POST)
+        city = request.POST.get('city')
         square = request.POST.get('square')
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         delivery = request.POST.get('delivery')
         loaders = request.POST.get('loaders')
 
+        storages = Storage.objects.filter(city_name=city)
         rent_boxes = [rent.box.id for rent in Rent.objects.all()]
-        free_boxes = Box.objects.exclude(pk__in=rent_boxes)
+        free_boxes = Box.objects.filter(storage__in=storages).exclude(pk__in=rent_boxes)
 
         date = datetime.strptime(end_date, "%Y-%m-%d") - datetime.strptime(start_date, "%Y-%m-%d")
         rise_price = 0
@@ -382,8 +383,11 @@ def calc(request):
                 'address': free_box.storage.address,
                 'price': price + rise_price
             })
-
         context['boxes'] = boxes
+    else:
+        form = CalcForm()
+
+    context['form'] = form
     request.session['data'] = request.POST
     return render(request, 'main/calc.html', context)
 
@@ -416,6 +420,42 @@ def forget_password(request):
 
     }
     return render(request, 'main/forget_password.html', context)
+
+
+def order2(request, box_id):
+
+    context = {}
+    box = Box.objects.get(pk=box_id)
+
+    if request.method == 'POST':
+        adress = request.POST.get('address')
+
+        delivery = False
+        loaders = False
+
+        # if request.session['data']['delivery']:
+        #     delivery = True
+
+        # if request.session['data']['loaders']:
+        #     loaders = True
+
+        Order.objects.create(
+            user=request.user,
+            box=box,
+            start_date=request.session['data']['start_date'],
+            end_date=request.session['data']['end_date'],
+            text=request.POST.get('text'),
+            delivery=delivery,
+            loaders=loaders
+        )
+        return render(request, 'main/send_order.html', context)
+    else:
+        form = OrderForm()
+        context['form'] = form
+        context['data'] = request.session['data']
+        context['box'] = box
+
+    return render(request, 'main/order2.html', context)
 
 
 def order(request):
