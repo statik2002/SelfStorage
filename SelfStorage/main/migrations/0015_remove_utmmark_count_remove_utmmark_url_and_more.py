@@ -49,16 +49,4 @@ class Migration(migrations.Migration):
             name='utm_term',
             field=models.CharField(blank=True, max_length=100, null=True, verbose_name='Ключевое слово'),
         ),
-        migrations.CreateModel(
-            name='RemindDay',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('day', models.IntegerField(verbose_name='количество дней')),
-                ('status', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='remind_day', to='main.status', verbose_name='статус')),
-            ],
-            options={
-                'verbose_name': 'Напоминание',
-                'verbose_name_plural': 'Напоминания',
-            },
-        ),
     ]

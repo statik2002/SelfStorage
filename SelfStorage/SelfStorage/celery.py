@@ -16,9 +16,9 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     # Executes every day at  10:00 am. use crontab(minute=0, hour=10)
-    # Executes every minutes use crontab(minute='*/1')
+    # Executes every 10 minutes use crontab(minute='*/10')
     'check-storage-life-and-send-email': {
         'task': 'main.tasks.check_storage_life',
-        'schedule': crontab(minute=0, hour=10),
+        'schedule': crontab(hour='*/4'),
     },
 }
