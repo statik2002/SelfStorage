@@ -1,0 +1,28 @@
+{% extends './base.html' %}
+
+{% load static %}
+{% block title %}
+<title>SelfStorage - My rent</title>
+{% endblock title %}
+{% block content %}
+<main class="container mt-header">
+	{% if form.errors %}
+	<form class="d-flex flex-column align-items-center" style="max-width: 420px" action="{% url 'main:callbackorder' %}" method="post">
+					<h1 class="modal-title text-center fw-bold mb-3">Заказ звонка</h1>
+					{% csrf_token %}
+					{{form.errors}}
+					{{ form }}
+					<input type="hidden" name="STORAGE_ID" value="" id="storage_id">
+					<!--
+					<input type="tel" required name="PHONE" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey">
+					-->
+					<button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Заказать звонок</button>
+					<!--
+					<span>Вспомнили пароль?  <a href="#SignModal" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#SignModal" data-bs-dismiss="modal" aria-label="Close">Отмена</a></span>
+					-->
+	</form>
+	{% else %}
+		<h1>Ваша заявка принята!</h1>
+	{% endif %}
+</main>
+{% endblock content %}

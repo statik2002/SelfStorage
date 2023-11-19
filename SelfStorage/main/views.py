@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -12,11 +12,11 @@ from django.urls import reverse
 from django.contrib import messages
 from django.utils import timezone
 
-from main.models import Customer, Storage, Box, Rent, Status, Image, RemindDay, Order
+from main.models import Customer, Storage, Box, Rent, Status, Image, Order, CallBackOrderStatus, CallBackOrder
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from main.models import Customer
-from .forms import CalcForm, OrderForm
+from .forms import CalcForm, CallBackOrderForm
 
 from .tasks import send_email
 import qrcode
@@ -60,10 +60,21 @@ def boxes_view(request):
 
     free_boxes = Box.objects.exclude(pk__in=rent_boxes)
 
+    if request.user.is_authenticated:
+        initial = {
+            'phone': request.user.phone_number,
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name
+        }
+        callback_form = CallBackOrderForm(initial=initial)
+    else:
+        callback_form = CallBackOrderForm()
+
     context = {
         'free_boxes': free_boxes,
         'storages': storages,
-        'store_db': store_db
+        'store_db': store_db,
+        'callback_form': callback_form
     }
 
     return render(request, 'main/boxes.html', context)
@@ -334,20 +345,19 @@ def tariff(request):
 
 def calc(request):
 
-    context = {}
+    form = CalcForm()
+    context = {'form': form}
 
     if request.method == 'POST':
-        form = CalcForm(request.POST)
-        city = request.POST.get('city')
+       # storage = request.POST.get('storage')
         square = request.POST.get('square')
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         delivery = request.POST.get('delivery')
         loaders = request.POST.get('loaders')
 
-        storages = Storage.objects.filter(city_name=city)
         rent_boxes = [rent.box.id for rent in Rent.objects.all()]
-        free_boxes = Box.objects.filter(storage__in=storages).exclude(pk__in=rent_boxes)
+        free_boxes = Box.objects.exclude(pk__in=rent_boxes)
 
         date = datetime.strptime(end_date, "%Y-%m-%d") - datetime.strptime(start_date, "%Y-%m-%d")
         rise_price = 0
@@ -372,11 +382,8 @@ def calc(request):
                 'address': free_box.storage.address,
                 'price': price + rise_price
             })
-        context['boxes'] = boxes
-    else:
-        form = CalcForm()
 
-    context['form'] = form
+        context['boxes'] = boxes
     request.session['data'] = request.POST
     return render(request, 'main/calc.html', context)
 
@@ -409,47 +416,6 @@ def forget_password(request):
 
     }
     return render(request, 'main/forget_password.html', context)
-
-
-def order2(request, box_id):
-
-    context = {}
-    box = Box.objects.get(pk=box_id)
-
-    if request.method == 'POST':
-        adress = request.POST.get('address')
-
-        delivery = False
-        loaders = False
-
-        # if request.session['data']['delivery']:
-        #     delivery = True
-
-        # if request.session['data']['loaders']:
-        #     loaders = True
-
-        Order.objects.create(
-            user=request.user,
-            box=box,
-            start_date=request.session['data']['start_date'],
-            end_date=request.session['data']['end_date'],
-            text=request.POST.get('text'),
-            delivery=delivery,
-            loaders=loaders
-        )
-        return render(request, 'main/send_order.html', context)
-    else:
-        form = OrderForm()
-        context['form'] = form
-        context['data'] = request.session['data']
-        context['box'] = box
-
-    return render(request, 'main/order2.html', context)
-
-
-def send_order(request):
-    context = {}
-    return render(request, 'main/send_order.html', context)
 
 
 def order(request):
@@ -521,3 +487,35 @@ def upload_avatar(request):
         return render(request, 'main/my-rent.html', context)
 
 
+def call_me(request):
+    if request.method == 'POST':
+        form = CallBackOrderForm(request.POST)
+        if form.is_valid():
+            phone = form.cleaned_data['phone']
+            callback_status = get_object_or_404(CallBackOrderStatus, title='Заказ звонка')
+            order = CallBackOrder.objects.create(
+                phone=phone,
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                status=callback_status
+            )
+            order.save()
+            context = {
+                'order': order
+            }
+            return render(request, 'main/callbackorder.html', context)
+        else:
+            print(form.errors)
+            context = {
+                'errors': form.errors,
+                'form': form
+            }
+            return render(request, 'main/callbackorder.html', context)
+
+    else:
+        form = CallBackOrderForm(initial=form)
+
+        context = {
+            'form': form
+        }
+        return render(request, 'main/callbackorder.html', context)

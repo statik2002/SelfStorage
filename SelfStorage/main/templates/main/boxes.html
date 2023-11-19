@@ -16,10 +16,43 @@
 				<form class="d-flex flex-column align-items-center" style="max-width: 420px" action="{% url 'main:order' %}" method="post">
 					{% csrf_token %}
 					<h1 class="modal-title text-center fw-bold mb-3">Заказ бокса для хранения</h1>
-					<input type="text" name="BOX_ID" value="" id="box_id">
+					<input type="hidden" name="BOX_ID" value="" id="box_id">
 					<input type="date" required name="FROM_DATE" id="from_date" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey">
 					<input type="date" required name="TO_DATE" id="to_date" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey">
 					<button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Заказать</button>
+					<!--
+					<span>Вспомнили пароль?  <a href="#SignModal" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#SignModal" data-bs-dismiss="modal" aria-label="Close">Отмена</a></span>
+					-->
+				</form>
+			</div>
+		</div>
+	</div>
+</aside>
+<aside class="modal fade" id="CallMe" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+		<div class="modal-content">
+			<div class="modal-header border-0">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex justify-content-center align-items-center">
+				<form class="d-flex flex-column align-items-center" style="max-width: 420px" action="{% url 'main:callbackorder' %}" method="post">
+					<h1 class="modal-title text-center fw-bold mb-3">Заказ звонка</h1>
+					{% csrf_token %}
+					{% for field in callback_form %}
+						<div class="row">
+							<div class="col-4">
+								{{field.label_tag}}
+							</div>
+							<div class="col-8">
+								{{field}}
+							</div>
+						</div>
+					{% endfor %}
+					<input type="hidden" name="STORAGE_ID" value="" id="storage_id">
+					<!--
+					<input type="tel" required name="PHONE" class="form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey">
+					-->
+					<button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Заказать звонок</button>
 					<!--
 					<span>Вспомнили пароль?  <a href="#SignModal" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#SignModal" data-bs-dismiss="modal" aria-label="Close">Отмена</a></span>
 					-->
@@ -56,121 +89,24 @@
 			{% for store in store_db %}
 				<li class="nav-item flex-grow-1 mx-2" role="presentation">
 					<a href="#BOX" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" id="pills-{{store.store.pk}}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{store.store.pk}}" role="tab" aria-controls="pills-{{store.store.pk}}" aria-selected="true">
-						<div class="col-12 col-lg-3 d-flex justify-content-center">
-							<img src="{{ store.image.image.url }}" alt="" class="mb-3 mb-lg-0" style="height:80px">
+						<div class="col-12 col-lg-3 col-xl-3 col-xxl-3 d-flex justify-content-center">
+							<img src="{{ store.image.image.url }}" alt="" class="mb-3 mb-lg-0" width="150">
 						</div>
-						<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
+						<div class="col-12 col-md-4 col-lg-3 col-xl-3 col-xxl-3 d-flex flex-column justify-content-center">
 							<h4 class="text-center">{{store.store.city}}</h4>
 							<h6 class="text-center">{{store.store.address}}</h6>
 						</div>
-						<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
+						<div class="col-12 col-md-4 col-lg-3 col-xl-3 col-xxl-3 d-flex flex-column justify-content-center">
 							<h4 class="text-center">{{store.free_boxes}} из {{store.boxes_count}}</h4>
 							<h6 class="text-center">Боксов свободно</h6>
 						</div>
-						<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
+						<div class="col-12 col-md-4 col-lg-3 col-xl-3 col-xxl-3 d-flex flex-column justify-content-center">
 							<h4 class="text-center SelfStorage_green">от {{store.min_price.price__min}} ₽</h4>
 							<h6 class="text-center">Рядом с метро</h6>
 						</div>
 					</a>
 				</li>
 			{% endfor %}
-			<!--
-			<li class="nav-item flex-grow-1 mx-2" role="presentation">
-				<a href="#BOX" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" id="pills-Moscow-tab" data-bs-toggle="pill" data-bs-target="#pills-Moscow" role="tab" aria-controls="pills-Moscow" aria-selected="true">
-					<div class="col-12 col-lg-3 d-flex justify-content-center">
-						<img src="{% static 'img/image11.png' %}" alt="" class="mb-3 mb-lg-0">
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">Москва</h4>
-						<h6 class="text-center">ул. Рокотова, д. 15</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">14  из 390</h4>
-						<h6 class="text-center">Боксов свободно</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center SelfStorage_green">от 3034 ₽</h4>
-						<h6 class="text-center">Рядом с метро</h6>
-					</div>
-				</a>
-			</li>
-			<li class="nav-item flex-grow-1 mx-2" role="presentation">
-				<a href="#BOX" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" id="pills-Odintsovo-tab" data-bs-toggle="pill" data-bs-target="#pills-Odintsovo" role="tab" aria-controls="pills-Odintsovo" aria-selected="true">
-					<div class="col-12 col-lg-3 d-flex justify-content-center">
-						<img src="{% static 'img/image9.png' %}" alt="" class="mb-3 mb-lg-0">
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">Одинцово</h4>
-						<h6 class="text-center">ул. Северная, д. 36</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">160  из 258</h4>
-						<h6 class="text-center">Боксов свободно</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center SelfStorage_green">от 2264 ₽</h4>
-						<h6 class="text-center">Парковка</h6>
-					</div>
-				</a>
-			</li>
-			<li class="nav-item flex-grow-1 mx-2" role="presentation">
-				<a href="#BOX" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" id="pills-Pushkino-tab" data-bs-toggle="pill" data-bs-target="#pills-Pushkino" role="tab" aria-controls="pills-Pushkino" aria-selected="true">
-					<div class="col-12 col-lg-3 d-flex justify-content-center">
-						<img src="{% static 'img/image15.png' %}" alt="" class="mb-3 mb-lg-0">
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">Пушкино</h4>
-						<h6 class="text-center">ул. Строителей, д. 5</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">58  из 361</h4>
-						<h6 class="text-center">Боксов свободно</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center SelfStorage_green">от 2154 ₽</h4>
-						<h6 class="text-center">Высокие потолки</h6>
-					</div>
-				</a>
-			</li>
-			<li class="nav-item flex-grow-1 mx-2" role="presentation">
-				<a href="#BOX" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" id="pills-Lubertsi-tab" data-bs-toggle="pill" data-bs-target="#pills-Lubertsi" role="tab" aria-controls="pills-Lubertsi" aria-selected="true">
-					<div class="col-12 col-lg-3 d-flex justify-content-center">
-						<img src="{% static 'img/image151.png' %}" alt="" class="mb-3 mb-lg-0">
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">Люберцы</h4>
-						<h6 class="text-center">ул. Советская, д. 88</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">4  из 130</h4>
-						<h6 class="text-center">Боксов свободно</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center SelfStorage_green">от 1408 ₽</h4>
-						<h6 class="text-center SelfStorage_orange">Осталось мало боксов</h6>
-					</div>
-				</a>
-			</li>
-			<li class="nav-item flex-grow-1 mx-2" role="presentation">
-				<a href="#BOX" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" id="pills-Domodedovo-tab" data-bs-toggle="pill" data-bs-target="#pills-Domodedovo" role="tab" aria-controls="pills-Domodedovo" aria-selected="true">
-					<div class="col-12 col-lg-3 d-flex justify-content-center">
-						<img src="{% static 'img/image16.png' %}" alt="" class="mb-3 mb-lg-0">
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">Домодедово</h4>
-						<h6 class="text-center">ул. Орджоникидзе, д. 29</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center">56  из 234</h4>
-						<h6 class="text-center">Боксов свободно</h6>
-					</div>
-					<div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
-						<h4 class="text-center SelfStorage_green">от 2988 ₽</h4>
-						<h6 class="text-center">Большие боксы</h6>
-					</div>
-				</a>
-			</li>
-			-->
 		</ul>
 		<script>
 			{% for store in storages %}
@@ -260,10 +196,11 @@
 										<!--
 										<a href="#" class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3 link" data-bs-toggle="modal" data-bs-target="#OrderModal">Арендовать бокс</a>
 										-->
-
-										<a href="#pills-tab-{{store.store.id}}" role="button" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Арендовать бокс</a>
-
+										<a href="#pills-tab" role="button" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Арендовать бокс</a>
+										<a href="" role="button" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange" data-bs-toggle="modal" data-bs-target="#CallMe">Позвонить мне</a>
+										<!--
 										<button class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange">Позвонить мне</button>
+										-->
 									</div>
 									<a href="#" class="text-center text-lg-start mt-4 SelfStorage_orange">Нужна помощь?</a>
 								</div>
@@ -344,7 +281,7 @@
 										<span class="SelfStorage_grey mb-3">Оплата за месяц</span>
 									</div>
 									<div class="d-flex flex-column align-items-center align-items-lg-start">
-										<a href="#pills-tab-{{store.store.id}}" role="button" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Арендовать бокс</a>
+										<a href="#pills-tab" role="button" class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Арендовать бокс</a>
 										<button class="btn w-75 fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange">Позвонить мне</button>
 									</div>
 									<a href="#" class="text-center text-lg-start mt-4 SelfStorage_orange">Нужна помощь?</a>
@@ -411,10 +348,10 @@
 										</div>
 									</div>
 									<div class="col-6 col-md-4 col-lg-2 d-flex justify-content-center align-items-center">
-										<span class="fs_24">{{ box.calc_square }} м²</span>
+										<span class="fs_24">{{ box.calc_square|floatformat:2 }} м²</span>
 									</div>
 									<div class="col-6 col-md-4 col-lg-4 d-flex justify-content-center align-items-center">
-										<span class="fs_24">{{box.length|to_meters}} х {{box.weigth|to_meters}} х {% widthratio box.length|to_meters 1 box.weigth|to_meters %} м²</span>
+										<span class="fs_24">{{box.length|to_meters}} х {{box.weigth|to_meters}} х {{box.heigth|to_meters}} м</span>
 									</div>
 									<div class="col-12 col-lg-2 data">
 										<!--
@@ -450,8 +387,12 @@
 									<div class="col-6 col-md-4 col-lg-4 d-flex justify-content-center align-items-center">
 										<span class="fs_24">{{box.length|to_meters}} х {{box.weigth|to_meters}} х {% widthratio box.length|to_meters 1 box.weigth|to_meters %} м²</span>
 									</div>
-									<div class="col-12 col-lg-2">
+									<div class="col-12 col-lg-2 data">
+										<!--
 										<span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8">От {{box.price}} ₽</span>
+										-->
+										<input type="hidden" value="{{box.id}}" class="box">
+										<span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8 link" data-bs-toggle="modal" data-bs-target="#OrderModal">От {{box.price}} ₽</span>
 									</div>
 								</a>
 							{% endif %}
@@ -481,8 +422,12 @@
 									<div class="col-6 col-md-4 col-lg-4 d-flex justify-content-center align-items-center">
 										<span class="fs_24">{{box.length|to_meters}} х {{box.weigth|to_meters}} х {% widthratio box.length|to_meters 1 box.weigth|to_meters %} м²</span>
 									</div>
-									<div class="col-12 col-lg-2">
+									<div class="col-12 col-lg-2 data">
+										<!--
 										<span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8">От {{box.price}} ₽</span>
+										-->
+										<input type="hidden" value="{{box.id}}" class="box">
+										<span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8 link" data-bs-toggle="modal" data-bs-target="#OrderModal">От {{box.price}} ₽</span>
 									</div>
 								</a>
 							{% endif %}
@@ -512,8 +457,12 @@
 									<div class="col-6 col-md-4 col-lg-4 d-flex justify-content-center align-items-center">
 										<span class="fs_24">{{box.length|to_meters}} х {{box.weigth|to_meters}} х {% widthratio box.length|to_meters 1 box.weigth|to_meters %} м²</span>
 									</div>
-									<div class="col-12 col-lg-2">
+									<div class="col-12 col-lg-2 data">
+										<!--
 										<span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8">От {{box.price}} ₽</span>
+										-->
+										<input type="hidden" value="{{box.id}}" class="box">
+										<span class="btn my-2 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange border-8 link" data-bs-toggle="modal" data-bs-target="#OrderModal">От {{box.price}} ₽</span>
 									</div>
 								</a>
 							{% endif %}

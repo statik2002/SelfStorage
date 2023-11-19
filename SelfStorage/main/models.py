@@ -318,6 +318,33 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
 
+class CallBackOrder(models.Model):
+
+    phone = PhoneNumberField(region='RU')
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    status = models.ForeignKey('CallBackOrderStatus', on_delete=models.CASCADE, related_name='callbackorders')
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name} {self.phone}'
+
+    class Meta:
+        verbose_name = 'Заказ на обратный звонок'
+        verbose_name_plural = 'Заказы на обратные звонки'
+
+
+class CallBackOrderStatus(models.Model):
+
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Статус заказа обратного звонка'
+        verbose_name_plural = 'Статусы заказов обратных звонков'
+
+
 class RemindDay(models.Model):
     day = models.IntegerField(
         verbose_name='количество дней'

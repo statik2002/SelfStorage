@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from main.models import Customer
+from main.models import Customer, CallBackOrder, CallBackOrderStatus
 from main.models import Storage, Box, Status, Rent, Image, UtmMark, Order, City, RemindDay
 
 
@@ -22,6 +22,16 @@ class ImageAdmin(admin.ModelAdmin):
     raw_id_fields = [
         'storage',
     ]
+
+
+@admin.register(CallBackOrder)
+class CallBackOrderAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(CallBackOrderStatus)
+class CallBackOrderStatusAdmin(admin.ModelAdmin):
+    pass
 
 
 class ImageInline(admin.TabularInline):
