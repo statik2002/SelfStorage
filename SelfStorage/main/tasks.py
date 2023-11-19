@@ -14,7 +14,6 @@ def serilaize_remind(remind_rent, check_day):
     check_day = check_day.replace('Хранение ', '')
     storage_tetx = f'подходит к концу, {check_day}' \
         if check_day == 'просрочен' else check_day.lower()
-    print(storage_tetx)
     return {
         'email': remind_rent.renter.email,
         'subject': f'Срок хранения Вашего бокса "{remind_rent.box.title}" '
@@ -47,6 +46,9 @@ def check_storage_life():
 
         status = Status.objects.get(title=check_days[check_day])
         for remind_rent in remind_rents:
+            if remind_rent.status.title.find('закон') > 0:
+                continue
+
             send_email(serilaize_remind(remind_rent, check_days[check_day]))
             remind_rent.status = status
             remind_rent.save()
@@ -58,6 +60,9 @@ def check_storage_life():
 
     status = Status.objects.get(title='Просрочен')
     for remind_rent in remind_rents:
+        if remind_rent.status.title.find('закон') > 0:
+            continue
+
         send_email(serilaize_remind(remind_rent, 'Просрочен'))
         remind_rent.status = status
         remind_rent.save()
