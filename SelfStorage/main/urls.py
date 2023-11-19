@@ -25,4 +25,6 @@ urlpatterns = [
     path('continue_rent/', views.continue_rent, name='continue_rent'),
     path('upload_avatar/', views.upload_avatar, name='upload_avatar'),
     path('callbackorder/', views.call_me, name='callbackorder'),
+    path('order/<int:box_id>', views.order2, name='order2'),
+    path('send_order', views.send_order, name='send_order'),
 ]
