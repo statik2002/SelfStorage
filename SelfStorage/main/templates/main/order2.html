@@ -6,7 +6,7 @@
     <div class="modal-body d-flex">
         <form class="d-flex flex-column justify-content-center align-items-left"  action="{% url 'main:order2' box.pk %}" method="post">
           {% csrf_token %}
-          <h1 class="modal-title text-center fw-bold mb-3">Ваш заказ:</h1>
+          <h1 class="fw-bold SelfStorage_green mb-5">Ваш заказ:</h1>
             <li>Город: {{ box.storage.city }}</li>
             <li>Бокс: {{ box.title }}</li>
             <li>Розер бокса: {{ box.length }} X {{ box.length }}</li>
