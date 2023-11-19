@@ -26,6 +26,8 @@ from io import BytesIO
 
 def index(request):
 
+    check_utm(request)
+
     registration_form = RegistrationForm()
 
     context = {
