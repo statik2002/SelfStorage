@@ -621,7 +621,7 @@ def check_utm(request):
         return reverse('main:index')
 
     UtmMark.objects.create(
-        check_in_date=datetime.datetime.now(),
+        check_in_date=timezone.now(),
         utm_source=request.GET.get('utm_source'),
         utm_medium=request.GET.get('utm_medium'),
         utm_campaign=request.GET.get('utm_campaign'),
