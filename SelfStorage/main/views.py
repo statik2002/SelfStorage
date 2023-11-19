@@ -469,6 +469,11 @@ def forget_password(request):
     return render(request, 'main/forget_password.html', context)
 
 
+def send_order(request):
+    context = {}
+    return render(request, 'main/send_order.html', context)
+
+
 def order2(request, box_id):
     registration_form = RegistrationForm()
     context = {}
