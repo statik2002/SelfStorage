@@ -36,3 +36,54 @@ class OrderForm(forms.Form):
         max_length=100
     )
     text = forms.CharField(label='Прмечание', required=False, widget=forms.Textarea)
+
+
+class RegistrationForm(forms.Form):
+    email = forms.EmailField(
+        label='',
+        max_length=255,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Ваш email'
+        })
+    )
+    first_name = forms.CharField(
+        label='',
+        max_length=255,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Ваше имя'
+        })
+    )
+    last_name = forms.CharField(
+        max_length=255,
+        label='',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Ваше фамилия'
+        })
+    )
+    phone = forms.CharField(
+        max_length=11,
+        label='',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Ваш телефон'
+        })
+    )
+    password1 = forms.CharField(
+        label='',
+        max_length=255,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Ваш пароль'
+        })
+    )
+    password2 = forms.CharField(
+        label='',
+        max_length=255,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Подтверждение пароля'
+        })
+    )

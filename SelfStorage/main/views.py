@@ -16,7 +16,7 @@ from main.models import Customer, Storage, Box, Rent, Status, Image, Order, Call
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from main.models import Customer
-from .forms import CalcForm, CallBackOrderForm, OrderForm
+from .forms import CalcForm, CallBackOrderForm, OrderForm, RegistrationForm
 
 from .tasks import send_email
 import qrcode
@@ -26,8 +26,10 @@ from io import BytesIO
 
 def index(request):
 
-    context = {
+    registration_form = RegistrationForm()
 
+    context = {
+        'registration_form': registration_form
     }
 
     return render(request, 'main/index.html', context)
@@ -70,36 +72,42 @@ def boxes_view(request):
     else:
         callback_form = CallBackOrderForm()
 
+    registration_form = RegistrationForm()
+
     context = {
         'free_boxes': free_boxes,
         'storages': storages,
         'store_db': store_db,
-        'callback_form': callback_form
+        'callback_form': callback_form,
+        'registration_form': registration_form
     }
 
     return render(request, 'main/boxes.html', context)
 
 
 def faq_view(request):
+    registration_form = RegistrationForm()
 
     context = {
-
+        'registration_form': registration_form
     }
 
     return render(request, 'main/faq.html', context)
 
 
 def my_rent_view(request):
+    registration_form = RegistrationForm()
     context = {
-
+        'registration_form': registration_form
     }
 
     return render(request, 'main/my-rent.html', context)
 
 
 def my_rent_empty_view(request):
+    registration_form = RegistrationForm()
     context = {
-
+        'registration_form': registration_form
     }
 
     return render(request, 'main/my-rent-empty.html', context)
@@ -281,6 +289,35 @@ def continue_rent(request):
 def user_registration(request):
 
     if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['password1'] != form.cleaned_data['password2']:
+                errors = {'error': 'пароли не совпадают!'}
+
+                context = {
+                    'errors': errors,
+                    'registration_form': form
+                }
+                return render(request, 'main/registration.html', context)
+            else:
+                user = Customer.objects.create_user(
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password1'],
+                    name=f'{form.cleaned_data["first_name"]} {form.cleaned_data["last_name"]}',
+                    phone_number=form.cleaned_data['phone'],
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name'],
+                    is_read_pd=True
+                )
+                login(request, user)
+                return redirect(reverse('main:cabinet'), kwargs={})
+        else:
+            context = {
+                'errors': form.errors,
+                'registration_form': form
+            }
+            return render(request, 'main/registration.html', context)
+        '''
         email = request.POST.get('EMAIL_CREATE')
         first_name = request.POST.get('FIRSTNAME_CREATE')
         last_name = request.POST.get('LASTNAME_CREATE')
@@ -306,45 +343,51 @@ def user_registration(request):
                 'error': 'Введенные пароли не совпадают!'
             }
             return HttpResponseRedirect(next, context)
+        '''
 
     else:
-        return render(request, 'main/index.html', {})
+        registration_form = RegistrationForm()
+        context = {
+            'registration_form': registration_form
+        }
+        return render(request, 'main/registration.html', context)
 
 
 def contacts(request):
+    registration_form = RegistrationForm()
     send_email.delay('vladpap@mail.ru')
     context = {
-
+        'registration_form': registration_form
     }
     return render(request, 'main/contacts.html', context)
 
 
 def law_doc(request):
-
+    registration_form = RegistrationForm()
     context = {
-
+        'registration_form': registration_form
     }
     return render(request, 'main/law_doc.html', context)
 
 
 def policy(request):
-
+    registration_form = RegistrationForm()
     context = {
-
+        'registration_form': registration_form
     }
     return render(request, 'main/policy.html', context)
 
 
 def tariff(request):
-
+    registration_form = RegistrationForm()
     context = {
-
+        'registration_form': registration_form
     }
     return render(request, 'main/tariff.html', context)
 
 
 def calc(request):
-
+    registration_form = RegistrationForm()
     context = {}
 
     if request.method == 'POST':
@@ -388,14 +431,15 @@ def calc(request):
         form = CalcForm()
 
     context['form'] = form
+    context['registration_form'] = registration_form
     request.session['data'] = request.POST
     return render(request, 'main/calc.html', context)
 
 
 def feedbacks(request):
-
+    registration_form = RegistrationForm()
     context = {
-
+        'registration_form': registration_form
     }
     return render(request, 'main/feedbacks.html', context)
 
@@ -409,8 +453,9 @@ def storage_list(request):
 
 
 def agreement(request):
+    registration_form = RegistrationForm()
     context = {
-
+        'registration_form': registration_form
     }
     return render(request, 'main/agreement.html', context)
 
@@ -423,7 +468,7 @@ def forget_password(request):
 
 
 def order2(request, box_id):
-
+    registration_form = RegistrationForm()
     context = {}
     box = Box.objects.get(pk=box_id)
 
@@ -448,21 +493,22 @@ def order2(request, box_id):
             delivery=delivery,
             loaders=loaders
         )
+        context['registration_form'] = registration_form
         return render(request, 'main/send_order.html', context)
     else:
         form = OrderForm()
         context['form'] = form
         context['data'] = request.session['data']
         context['box'] = box
+        context['registration_form'] = registration_form
 
     return render(request, 'main/order2.html', context)
 
 
 def order(request):
 
-    if not request.user:
+    if not request.user.is_authenticated:
         context = {
-
         }
         return redirect(reverse('main:registration'), kwargs={})
 
@@ -496,6 +542,7 @@ def order(request):
         return render(request, 'main/order.html', context)
 
 
+@login_required
 def upload_avatar(request):
     if request.method == 'POST':
         image = request.FILES.get('AVATAR')
@@ -545,7 +592,6 @@ def call_me(request):
             }
             return render(request, 'main/callbackorder.html', context)
         else:
-            print(form.errors)
             context = {
                 'errors': form.errors,
                 'form': form
@@ -553,7 +599,7 @@ def call_me(request):
             return render(request, 'main/callbackorder.html', context)
 
     else:
-        form = CallBackOrderForm(initial=form)
+        form = CallBackOrderForm()
 
         context = {
             'form': form
@@ -576,4 +622,4 @@ def check_utm(request):
         utm_term=request.GET.get('utm_term')
     )
 
-    return reverse('index')
+    return reverse('main:index')
