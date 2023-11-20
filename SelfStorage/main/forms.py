@@ -21,6 +21,7 @@ class CalcForm(forms.Form):
     end_date = forms.DateField(label='Окончание использования', widget=DateInput(attrs={'type': 'date'}))
     delivery = forms.BooleanField(label='Доставка', required=False)
     loaders = forms.BooleanField(label='Грузчики', required=False)
+    measurement = forms.BooleanField(label='Замерщик', required=False)
 
 
 class CallBackOrderForm(forms.Form):
@@ -30,11 +31,11 @@ class CallBackOrderForm(forms.Form):
 
 
 class OrderForm(forms.Form):
-    address = forms.CharField(
-        label='Адрес',
-        required=False,
-        max_length=100
-    )
+    # address = forms.CharField(
+    #     label='Адрес',
+    #     required=False,
+    #     max_length=100
+    # )
     text = forms.CharField(label='Прмечание', required=False, widget=forms.Textarea)
 
 

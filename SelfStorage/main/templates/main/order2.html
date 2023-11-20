@@ -12,6 +12,25 @@
             <li>Розер бокса: {{ box.length }} X {{ box.length }}</li>
             <li>Адрес: {{ box.storage.city }} - {{ box.storage.address }}</li>
             <li>C {{ data.start_date }} До {{ data.end_date }}</li>
+            <li>Цена аренды: {{ price }}</li>
+            {% if data.delivery%}
+              <li>Доставка: 1500р</li>
+            {% else %}
+              <li>Доставка: Нет</li>
+            {% endif %}
+
+            {% if data.loaders%}
+              <li>Грузчики: 3000р</li>
+            {% else %}
+              <li>Грузчики: Нет</li>
+            {% endif %}
+
+            {% if data.measurement%}
+              <li>Замерщик: 500р</li>
+            {% else %}
+              <li>Замерщик: Нет</li>
+            {% endif %}
+            <li>Итоговая цена: {{ total_price }}</li>
             {{ form }}
           <button class="btn border-8 py-3 px-5 mt-5 mb-3 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Заказать</button>
         </form>

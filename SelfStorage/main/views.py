@@ -401,6 +401,7 @@ def calc(request):
         end_date = request.POST.get('end_date')
         delivery = request.POST.get('delivery')
         loaders = request.POST.get('loaders')
+        measurement = request.POST.get('measurement')
 
         storages = Storage.objects.filter(city_name=city)
         rent_boxes = [rent.box.id for rent in Rent.objects.all()]
@@ -414,6 +415,9 @@ def calc(request):
 
         if loaders:
             rise_price += 3000
+        
+        if measurement:
+            rise_price += 500
 
         boxes = []
         for free_box in free_boxes:
@@ -480,21 +484,31 @@ def order2(request, box_id):
     context = {}
     box = Box.objects.get(pk=box_id)
 
+    delivery = False
+    loaders = False
+
+    rise_price = 0
+
+    date = datetime.strptime(request.session['data'].get('end_date'), "%Y-%m-%d") - datetime.strptime(request.session['data'].get('start_date'), "%Y-%m-%d")
+
+    price = int(box.price / 30 * date.days)
+
+    if request.session['data'].get('delivery'):
+        delivery = True
+        rise_price += 1500
+
+    if request.session['data'].get('loaders'):
+        loaders = True
+        rise_price += 3000
+
     if request.method == 'POST':
-        adress = request.POST.get('address')
 
-        delivery = False
-        loaders = False
-
-        # if request.session['data']['delivery']:
-        #     delivery = True
-
-        # if request.session['data']['loaders']:
-        #     loaders = True
+        status, _ = Status.objects.get_or_create(title='Ожидает подтверждения')
 
         Order.objects.create(
             user=request.user,
             box=box,
+            status=status,
             start_date=request.session['data']['start_date'],
             end_date=request.session['data']['end_date'],
             text=request.POST.get('text'),
@@ -509,6 +523,8 @@ def order2(request, box_id):
         context['data'] = request.session['data']
         context['box'] = box
         context['registration_form'] = registration_form
+        context['price'] = price
+        context['total_price'] = price + rise_price
 
     return render(request, 'main/order2.html', context)
 
