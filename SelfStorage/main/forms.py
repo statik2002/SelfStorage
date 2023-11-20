@@ -14,14 +14,40 @@ class CalcForm(forms.Form):
         label='Выберите город',
         localize=True,
         queryset=City.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey'})
     )
-    square = forms.DecimalField(label='Какая площадь необходима', decimal_places=1, max_digits=3, min_value=1.5)
-    start_date = forms.DateField(label='Начала использования', widget=DateInput(attrs={'type': 'date'}))
-    end_date = forms.DateField(label='Окончание использования', widget=DateInput(attrs={'type': 'date'}))
-    delivery = forms.BooleanField(label='Доставка', required=False)
-    loaders = forms.BooleanField(label='Грузчики', required=False)
-    measurement = forms.BooleanField(label='Замерщик', required=False)
+    square = forms.DecimalField(
+        label='Какая площадь необходима',
+        decimal_places=1,
+        max_digits=3,
+        min_value=1.5,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey'
+        })
+    )
+    start_date = forms.DateField(
+        label='Начала использования',
+        widget=DateInput(attrs={'type': 'date', 'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey'})
+    )
+    end_date = forms.DateField(
+        label='Окончание использования',
+        widget=DateInput(attrs={'type': 'date', 'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey'})
+    )
+    delivery = forms.BooleanField(
+        label='Доставка',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    loaders = forms.BooleanField(
+        label='Грузчики',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    measurement = forms.BooleanField(
+        label='Замерщик',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
 
 
 class CallBackOrderForm(forms.Form):
