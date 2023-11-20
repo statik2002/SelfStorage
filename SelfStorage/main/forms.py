@@ -25,9 +25,28 @@ class CalcForm(forms.Form):
 
 
 class CallBackOrderForm(forms.Form):
-    phone = PhoneNumberField(label='Ваш телефон', region='RU', widget=forms.NumberInput(attrs={'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey'}))
-    first_name = forms.CharField(label='Ваше имя', widget=forms.TextInput(attrs={'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey'}))
-    last_name = forms.CharField(label='Ваша фамилия', widget=forms.TextInput(attrs={'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey'}))
+    phone = PhoneNumberField(
+        label='',
+        region='RU',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Ваш телефон'
+        })
+    )
+    first_name = forms.CharField(
+        label='',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Ваше имя'
+        })
+    )
+    last_name = forms.CharField(
+        label='',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control border-8 mb-4 py-3 px-5 border-0 fs_24 SelfStorage__bg_lightgrey',
+            'placeholder': 'Ваша фамилия'
+        })
+    )
 
 
 class OrderForm(forms.Form):

@@ -90,9 +90,11 @@ def boxes_view(request):
 
 def faq_view(request):
     registration_form = RegistrationForm()
+    callback_form = CallBackOrderForm()
 
     context = {
-        'registration_form': registration_form
+        'registration_form': registration_form,
+        'callback_form': callback_form
     }
 
     return render(request, 'main/faq.html', context)
@@ -320,33 +322,6 @@ def user_registration(request):
                 'registration_form': form
             }
             return render(request, 'main/registration.html', context)
-        '''
-        email = request.POST.get('EMAIL_CREATE')
-        first_name = request.POST.get('FIRSTNAME_CREATE')
-        last_name = request.POST.get('LASTNAME_CREATE')
-        phone = request.POST.get('PHONE_CREATE')
-        password_create = request.POST.get('PASSWORD_CREATE')
-        password_confirm = request.POST.get('PASSWORD_CONFIRM')
-        if password_create == password_confirm:
-            user = Customer.objects.create_user(
-                email=email,
-                password=password_create,
-                name=f'{first_name} {last_name}',
-                phone_number=phone,
-                first_name=first_name,
-                last_name=last_name,
-                is_read_pd=True
-            )
-            login(request, user)
-            return redirect(reverse('main:cabinet'), kwargs={})
-        else:
-            messages.add_message(request, messages.WARNING, 'Введенные пароли не совпадают!')
-            next = request.POST.get('next', '/')
-            context = {
-                'error': 'Введенные пароли не совпадают!'
-            }
-            return HttpResponseRedirect(next, context)
-        '''
 
     else:
         registration_form = RegistrationForm()
