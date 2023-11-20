@@ -61,6 +61,20 @@
 		</div>
 	</div>
 </aside>
+{% for storage in store_db %}
+<aside class="modal fade" id="Map-{{storage.store.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header border-0">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex justify-content-center align-items-center">
+				{{storage.store.map|safe}}
+			</div>
+		</div>
+	</div>
+</aside>
+{% endfor %}
 <main class="container mt-header">
 	<article class="row">
 		<div class="col-12 col-lg-6 mb-3 mb-lg-0">
@@ -124,15 +138,13 @@
 						<h1 class="text-center mb-4 fw-bold">{{store.store.city}} {{store.store.address}}</h1>
 						<div class="row d-flex flex-column mb-5">
 							<div class="col-12 col-sm-6 col-lg-4 d-flex justify-content-between align-self-center">
-								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Контакты" data-bs-content="Список контактов">
+								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Контакты" data-bs-html="true" data-bs-content="{{store.store.city}}<br> {{store.store.address}}<br> {{store.store.phone}}<br> {{store.store.email}}">
 									Контакты
 								</a>
-								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Описание" data-bs-content="Текст описания">
+								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Описание" data-bs-content="{{store.store.description}}">
 									Описание
 								</a>
-								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Проезд" data-bs-content="Описание проезда">
-									Проезд
-								</a>
+								<a type="button" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#Map-{{store.store.pk}}">Карта</a>
 							</div>
 						</div>
 						<div class="row">
@@ -212,15 +224,13 @@
 						<h1 class="text-center mb-4 fw-bold">{{store.store.city}} {{store.store.address}}</h1>
 						<div class="row d-flex flex-column mb-5">
 							<div class="col-12 col-sm-6 col-lg-4 d-flex justify-content-between align-self-center">
-								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Контакты" data-bs-content="Список контактов">
+								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Контакты" data-bs-html="true" data-bs-content="{{store.store.city}}<br> {{store.store.address}}<br> {{store.store.phone}}<br> {{store.store.email}}">
 									Контакты
 								</a>
-								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Описание" data-bs-content="Текст описания">
+								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Описание" data-bs-content="{{store.store.description}}">
 									Описание
 								</a>
-								<a type="button" class="SelfStorage_orange" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" title="Проезд" data-bs-content="Описание проезда">
-									Проезд
-								</a>
+								<a type="button" class="SelfStorage_orange" data-bs-toggle="modal" data-bs-target="#Map-{{store.store.pk}}">Карта</a>
 							</div>
 						</div>
 						<div class="row">

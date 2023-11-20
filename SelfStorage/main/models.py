@@ -108,7 +108,7 @@ class Storage(models.Model):
         verbose_name='Email склада'
     )
     map = models.CharField(
-        max_length=200,
+        max_length=1000,
         verbose_name='Карта'
     )
     temperature = models.DecimalField(
