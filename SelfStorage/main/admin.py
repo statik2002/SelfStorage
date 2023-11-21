@@ -143,8 +143,10 @@ class OrderAdmin(admin.ModelAdmin):
         'start_date',
         'end_date',
         'status',
+        'rise_price',
         'delivery',
         'loaders',
+        'measurement'
     ]
     raw_id_fields = [
         'user',

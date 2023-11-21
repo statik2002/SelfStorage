@@ -303,12 +303,23 @@ class Order(models.Model):
         blank=True,
         null=True
     )
+    measurement = models.BooleanField(
+        verbose_name='Замерщик',
+        blank=True,
+        null=True
+    )
     text = models.TextField(
         verbose_name='Примечание',
         blank=True,
         null=True
     )
-
+    rise_price = models.DecimalField(
+        max_digits=8,
+        decimal_places=1,
+        verbose_name='Цена',
+        blank=True,
+        null=True
+    )
     def __str__(self) -> str:
         return f'{self.user.name} - {self.box.title}'
 

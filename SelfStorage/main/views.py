@@ -461,6 +461,7 @@ def order2(request, box_id):
 
     delivery = False
     loaders = False
+    measurement = False
 
     rise_price = 0
 
@@ -476,6 +477,10 @@ def order2(request, box_id):
         loaders = True
         rise_price += 3000
 
+    if request.session['data'].get('measurement'):
+        measurement = True
+        rise_price += 500
+
     if request.method == 'POST':
 
         status, _ = Status.objects.get_or_create(title='Ожидает подтверждения')
@@ -488,7 +493,9 @@ def order2(request, box_id):
             end_date=request.session['data']['end_date'],
             text=request.POST.get('text'),
             delivery=delivery,
-            loaders=loaders
+            loaders=loaders,
+            measurement=measurement,
+            rise_price=rise_price
         )
         context['registration_form'] = registration_form
         return render(request, 'main/send_order.html', context)
